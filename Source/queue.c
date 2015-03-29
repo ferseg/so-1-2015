@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "queue.h"
+#include "../Headers/queue.h"
 
 int count = 0;
  
