@@ -27,7 +27,6 @@ void enq(struct process *pProcess)
         rear = (struct queue *)malloc(sizeof(struct queue));
         rear->next = NULL;
         rear->current = pProcess;
-//        rear->current = new_process(pId,pBurst,pPriority);
         front = rear;
     }
     else
@@ -36,7 +35,6 @@ void enq(struct process *pProcess)
         temp->next = NULL;
         rear->next = temp;
         temp->current = pProcess;
-//        temp->current = new_process(pId,pBurst,pPriority);
         rear = temp;
     }
     count++;
