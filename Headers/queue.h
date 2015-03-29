@@ -5,19 +5,20 @@ struct queue
 {
     struct process *current;
     struct queue *next;
-}*front,*rear,*temp,*front1;
+}*front,*rear;
 
 /* Create an empty queue */
 void create();
  
 /* Returns queue size */
-void queuesize();
+int queuesize();
  
+
 /* Enqueing the queue */
-void enq(int pId,int pBurst,int pPriority);
+void enq(struct process *pProcess);
 
 /* Dequeing the queue */
-void deq();
+struct process* deq();
 
 /* Displaying the queue elements */
 void display();

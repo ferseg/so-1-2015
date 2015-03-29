@@ -2,26 +2,25 @@
  
 int main()
 {
-	printf("----------------Testing Process----------------\n");
-	struct process *p1 = new_process(1,8,1);
-	print_data(p1);
-	update_state(p1,2);
-	print_data(p1);
-	printf("-----------------------------------------------\n");
+	struct process *p1 = new_process(1,8,2);
+	struct process *p2 = new_process(2,6,1);
+	struct process *p3 = new_process(3,11,4);
+	struct process *p4 = new_process(4,9,3);
+	struct process *p5 = new_process(5,2,2);
 	
 	printf("-----------------Testing Queue-----------------\n");
 	create();
-	enq(1,8,2);
-	enq(2,6,1);
-	enq(3,11,4);
-	enq(4,9,3);
+	enq(p1);
 	
-	display();	
-	queuesize();
+//	display();
+//	struct process *p = deq();
 	
-	deq();
-	display();	
-	queuesize();
+	printf("-----------------Testing Queue-----------------\n");
+	enq(p2);
+	enq(p3);
+	enq(p4);
+	enq(p5);
+	display();
 	
 	return 0;
 }
