@@ -1,42 +1,30 @@
+<<<<<<< HEAD:Source/queue.c
 #include "queue.h"
 
 int count = 0;
  
-/* Create an empty queue */
-void create()
+=======
+#ifndef QUEUE_H_   /* Include guard */
+#define QUEUE_H_
+
+struct queue
 {
-    front = rear = NULL;
-}
+    struct process *current;
+    struct queue *next;
+}*front,*rear,*temp,*front1;
+
+>>>>>>> ae621adb782fa6876515a7f64155a3abad298e84:src/queue.h
+/* Create an empty queue */
+void create();
  
 /* Returns queue size */
-void queuesize()
-{
-    printf("\n-------------Queue size : %d-------------", count);
-}
+void queuesize();
  
 /* Enqueing the queue */
-void enq(int pId,int pBurst,int pPriority)
-{
-    if (rear == NULL)
-    {
-    	front = (struct queue *)malloc(sizeof(struct queue));
-        rear = (struct queue *)malloc(sizeof(struct queue));
-        rear->next = NULL;
-        rear->current = new_process(pId,pBurst,pPriority);
-        front = rear;
-    }
-    else
-    {
-        temp=(struct queue *)malloc(sizeof(struct queue));
-        temp->next = NULL;
-        rear->next = temp;
-        temp->current = new_process(pId,pBurst,pPriority);
-        rear = temp;
-    }
-    count++;
-}
+void enq(int pId,int pBurst,int pPriority);
 
 /* Dequeing the queue */
+<<<<<<< HEAD:Source/queue.c
 void deq()
 {
     front1 = front;
@@ -65,22 +53,11 @@ void deq()
         }
         count--;
 }
+=======
+void deq();
+>>>>>>> ae621adb782fa6876515a7f64155a3abad298e84:src/queue.h
 
 /* Displaying the queue elements */
-void display()
-{
-    front1 = front;
- 
-    if ((front1 == NULL) && (rear == NULL))
-    {
-        printf("Queue is empty");
-        return;
-    }
-    while (front1 != rear)
-    {
-        print_data(front1->current);
-        front1 = front1->next;
-    }
-    if (front1 == rear)
-        print_data(front1->current);
-}
+void display();
+
+#endif // QUEUE_H_
