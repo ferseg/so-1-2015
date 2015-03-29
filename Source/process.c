@@ -1,6 +1,3 @@
-<<<<<<< HEAD:Source/process.c
-#include "process.h"
-=======
 #ifndef PROCESS_H_   /* Include guard */
 #define PROCESS_H_
 
@@ -11,7 +8,6 @@ struct process
     int state;
     int priority;
 };
->>>>>>> ae621adb782fa6876515a7f64155a3abad298e84:src/process.h
 
 struct process* new_process(int pId, int pBurst,int pPriority);
 
