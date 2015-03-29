@@ -4,7 +4,6 @@
 #include "../Headers/queue.h"
 
 int count = 0;
-struct queue *temp,*front1 = NULL;
 
 /* Create an empty queue */
 void create()
@@ -21,6 +20,7 @@ int queuesize()
 /* Enqueing the queue */
 void enq(struct process *pProcess)
 {
+	struct queue *temp = NULL;
     if (rear == NULL)
     {
     	front = (struct queue *)malloc(sizeof(struct queue));
@@ -45,8 +45,9 @@ void enq(struct process *pProcess)
 /* Dequeing the queue */
 struct process* deq()
 {
-    front1 = front;
-    struct process *temp1;
+	struct queue *temp = NULL;
+	struct process *temp1;
+    struct queue *front1 = front;
     if (front1 == NULL)
     {
         return temp1;
@@ -71,9 +72,9 @@ struct process* deq()
 }
 
 /* Displaying the queue elements */
-void display()
+void display_queue()
 {
-    front1 = front;
+    struct queue *front1 = front;
  
     if ((front1 == NULL) && (rear == NULL))
     {

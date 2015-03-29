@@ -21,6 +21,6 @@ void enq(struct process *pProcess);
 struct process* deq();
 
 /* Displaying the queue elements */
-void display();
+void display_queue();
 
 #endif // QUEUE_H_
