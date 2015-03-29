@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "process.h"
 
 struct process* new_process(int pId, int pBurst,int pPriority) {

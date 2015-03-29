@@ -1,6 +1,8 @@
 #ifndef QUEUE_H_   /* Include guard */
 #define QUEUE_H_
 
+##include "process.h"
+
 struct queue
 {
     struct process *current;
