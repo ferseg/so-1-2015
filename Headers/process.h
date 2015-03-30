@@ -1,3 +1,5 @@
+#include "../Headers/timer.h"
+
 #ifndef PROCESS_H_   /* Include guard */
 #define PROCESS_H_
 
@@ -7,6 +9,7 @@ struct process
     int burst;
     int state;
     int priority;
+    struct timer *timer;
 };
 
 struct process* new_process(int pId, int pBurst,int pPriority);
