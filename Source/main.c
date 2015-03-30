@@ -1,21 +1,39 @@
 #include "../Headers/queue.h"
- 
+#include "../Headers/timer.h"
+
+
 int main()
 {
-	struct process *p1 = new_process(1,8,2);
-	update_state(p1,2);
+//	struct timer *t1 = new_timer();
+//	struct timer *t2 = new_timer();
 	
 	printf("-----------------Testing Queue-----------------\n");
 	create();
-	enq(p1);
-	
-//	display();
-//	struct process *p = deq();
+
+	enq(new_process(1,8,2));
 	enq(new_process(2,6,1));
 	enq(new_process(3,11,4));
 	enq(new_process(4,9,3));
 	enq(new_process(5,2,2));
 	display_queue();
 	
+//	struct process *p = deq();
+//	update_state(p,2);
+//	enq(p);
+//	display_queue();
+	
+//	stop_timer(t1);
+//	
+//	add_count();
+//	add_count();
+//	add_count();
+//	add_count();
+//	add_count();
+//	add_count();
+//	add_count();
+//	add_count();
+//	
+//	get_timer(t1);
+//	get_timer(t2);
 	return 0;
 }

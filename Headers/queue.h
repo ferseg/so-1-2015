@@ -12,7 +12,6 @@ void create();
  
 /* Returns queue size */
 int queuesize();
- 
 
 /* Enqueing the queue */
 void enq(struct process *pProcess);
