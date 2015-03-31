@@ -1,5 +1,3 @@
-#include "../Headers/timer.h"
-
 #ifndef PROCESS_H_   /* Include guard */
 #define PROCESS_H_
 

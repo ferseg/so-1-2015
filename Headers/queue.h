@@ -1,7 +1,7 @@
 #ifndef QUEUE_H_   /* Include guard */
 #define QUEUE_H_
 
-struct queue
+struct queue 
 {
     struct process *current;
     struct queue *next;

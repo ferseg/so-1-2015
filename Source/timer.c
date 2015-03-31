@@ -9,7 +9,7 @@ struct timer* new_timer(){
 }
 
 void stop_timer(struct timer *pTimer){
-	pTimer->stop = clock() - (clock_t)pTimer->start;
+	pTimer->stop = (float)(clock() - (clock_t)pTimer->start) / CLOCKS_PER_SEC;
 }
 
 clock_t get_start(struct timer *pTimer){
@@ -20,28 +20,15 @@ float get_stop(struct timer *pTimer){
 	return pTimer->stop;
 }
 
-void get_timer(struct timer *pTimer){
-	int msec;
+float get_timer(struct timer *pTimer){
+	float msec;
 	if(pTimer->stop >= 0){
-		msec = pTimer->stop * 1000 / CLOCKS_PER_SEC;
-		printf("\nTime taken %d seconds %d milliseconds", msec/1000, msec%1000);
-		return;
+		msec = pTimer->stop;
 	}
-	clock_t diff;	
-	diff = clock() - (clock_t)pTimer->start;
-	msec = diff * 1000 / CLOCKS_PER_SEC;
-	printf("\nasdTime taken %d seconds %d milliseconds", msec/1000, msec%1000);
-
+	else{
+		msec = (float)(clock() - (clock_t)pTimer->start) / CLOCKS_PER_SEC;	
+	}
+	printf("\nTime taken %f seconds", msec);
+	return msec;
 }
 
-void print_timer(struct timer *pTimer){
-	if(pTimer->stop != 0){
-		int msec = pTimer->stop * 1000 / CLOCKS_PER_SEC;
-		printf("\nTime taken %d seconds %d milliseconds", msec/1000, msec%1000);
-		return;
-	}
-	clock_t diff;
-	diff = clock() - (clock_t)pTimer->start;
-	int msec = diff * 1000 / CLOCKS_PER_SEC;
-	printf("\nTime taken %d seconds %d milliseconds", msec/1000, msec%1000);
-}
