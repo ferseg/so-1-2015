@@ -29,7 +29,7 @@ void enq(queue *pQueue, process *pProcess)
     else
     {   
 		node *nNode = newNode(pProcess);
-        pQueue->rear->next = nNode;
+        setNext(pQueue->rear, nNode);
         pQueue->rear = nNode;
     }
     pQueue->count++;

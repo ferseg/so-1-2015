@@ -1,27 +1,27 @@
 #include "../Headers/client.h"
 
 
-struct client* new_client(int pType, int pSorting_method){
-	struct client *nc = (struct client*)(malloc(sizeof(struct client)));
+client* newClient(int pType, int pSortingMethod){
+	client *nc = malloc(sizeof(client));
 	nc->type = pType;
-	nc->sorting_method = pSorting_method;
+	nc->sortingMethod = pSortingMethod;
 	nc->status = 1;
 	return nc;
 }
 
-int get_type(struct client *pClient){
+int getType(client *pClient){
 	return pClient->type;
 }
 
-int get_sorting_method(struct client *pClient){
-	return pClient->sorting_method;
+int getSortingMethod(client *pClient){
+	return pClient->sortingMethod;
 }
 
-int get_status(struct client *pClient){
+int getStatus(client *pClient){
 	return pClient->status;
 }
 
-void turn_off_client(){
-	
+void turnOffClient(client *pClient){
+	pClient->status = 0;
 }
 
