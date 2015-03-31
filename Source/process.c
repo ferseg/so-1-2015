@@ -1,58 +1,57 @@
 #include "../Headers/process.h"
 
-struct process* new_process(int pId, int pBurst,int pPriority) {
-	struct process *p = (struct process*)malloc(sizeof(struct process));
-  	p->id = pId;
-  	p->burst = pBurst;
-  	p->state = 0;
-	p->priority = pPriority;
-	p->timer = new_timer();
-	return p;
+process* newProcess(int pId, int pBurst,int pPriority) {
+	process *newProcess = malloc(sizeof(process));
+  	newProcess->id = pId;
+  	newProcess->burst = pBurst;
+  	newProcess->state = 0;
+	newProcess->priority = pPriority;
+	newProcess->timer = newTimer();
+	return newProcess;
 }
 
-int get_id(struct process *pProcess){
+int getId(process *pProcess){
 	return pProcess->id;
 }
 
-int get_burst(struct process *pProcess){
+int getBurst(process *pProcess){
 	return pProcess->burst;
 }
 
-int get_state(struct process *pProcess){
+int getState(process *pProcess){
 	return pProcess->state;
 }
 
-int get_priority(struct process *pProcess){
+int getPriority(process *pProcess){
 	return pProcess->priority;
 }
 
-int isOver(struct process *pProcess){
+int isOver(process *pProcess){
 	if(pProcess->burst == pProcess->state)
 		return 1;
 	return 0;
 }
 
-void update_state(struct process *pProcess,int pValue){
+void updateState(process *pProcess,int pValue){
 	pProcess->state += pValue;
 	if(pProcess->burst == pProcess->state){
-		stop_timer(pProcess->timer);
+		stopTimer(pProcess->timer);
 	}
 }
 
-int get_needed_time(struct process *pProcess){
+int getNeededTime(process *pProcess){
 	return pProcess->burst - pProcess->state;
 }
 
-float get_WT(struct process *pProcess){
-	return get_timer(pProcess->timer) - pProcess->burst;
+float getWT(process *pProcess){
+	return getTimer(pProcess->timer) - pProcess->burst;
 }
 
-float get_TAT(struct process *pProcess){
-	return get_timer(pProcess->timer);
+float getTAT(process *pProcess){
+	return getTimer(pProcess->timer);
 }
 
-const char * to_string(struct process *pProcess)
-{
+const char * processToString(process *pProcess){
 	char *str;
 	asprintf(&str, "ID: %d\nBurst: %d\nState: %d/%d\nPriority: %d\n",
 			pProcess->id,
@@ -63,7 +62,7 @@ const char * to_string(struct process *pProcess)
     return str;
 }
 
-void print_data(struct process *pProcess){
-	printf("%s\n",to_string(pProcess));
+void printProcess(process *pProcess){
+	printf("%s\n",processToString(pProcess));
 }
 

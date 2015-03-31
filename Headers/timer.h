@@ -4,13 +4,13 @@
 #ifndef TIMER_H_   /* Include guard */
 #define TIMER_H_
 
-struct timer{
+typedef struct timer{
 	clock_t *start;
 	float stop;
-};
+}timer;
 
-struct timer* new_timer();
-void stop_timer(struct timer *pTimer);
-float get_timer(struct timer *pTimer);
+timer* newTimer();
+void stopTimer(timer *pTimer);
+float getTimer(timer *pTimer);
 
 #endif // TIMER_H_

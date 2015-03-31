@@ -1,29 +1,31 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../Headers/node.h"
 
 #ifndef QUEUE_H_   /* Include guard */
 #define QUEUE_H_
 
-struct queue 
+typedef struct queue 
 {
-    struct process *current;
-    struct queue *next;
-}*front,*rear;
+    node *front;
+    node *rear;
+    int count;
+}queue;
 
 /* Create an empty queue */
-void create();
+queue* newQueue();
  
 /* Returns queue size */
-int queuesize();
+int getQueueSize();
 
 /* Enqueing the queue */
-void enq(struct process *pProcess);
+void enq(queue *pQueue, process *pProcess);
 
 /* Dequeing the queue */
-struct process* deq();
+process* deq(queue *pQueue);
 
 /* Displaying the queue elements */
-void display_queue();
+void printQueue(queue *pQueue);
 
 #endif // QUEUE_H_

@@ -1,87 +1,84 @@
 #include "../Headers/queue.h"
 
-int count = 0;
-
 /* Create an empty queue */
-void create()
+queue* newQueue()
 {
-    front = rear = NULL;
+	queue *newQueue = malloc(sizeof(queue));
+	newQueue->count = 0;
+	newQueue->front = NULL;
+	newQueue->rear = NULL;
+	return newQueue;
 }
  
 /* Returns queue size */
-int queuesize()
+int getQueueSize(queue *pQueue)
 {
-    return count;
+    return pQueue->count;
 }
 
 /* Enqueing the queue */
-void enq(struct process *pProcess)
+void enq(queue *pQueue, process *pProcess)
 {
-	struct queue *temp = NULL;
-    if (rear == NULL)
+    if (pQueue->rear == NULL)
     {
-    	front = (struct queue *)malloc(sizeof(struct queue));
-        rear = (struct queue *)malloc(sizeof(struct queue));
-        rear->next = NULL;
-        rear->current = pProcess;
-        front = rear;
+    	pQueue->front = malloc(sizeof(node));
+        pQueue->rear = malloc(sizeof(node));
+        pQueue->rear = newNode(pProcess);
+        pQueue->front = pQueue->rear;
     }
     else
-    {
-        temp=(struct queue *)malloc(sizeof(struct queue));
-        temp->next = NULL;
-        rear->next = temp;
-        temp->current = pProcess;
-        rear = temp;
+    {   
+		node *nNode = newNode(pProcess);
+        pQueue->rear->next = nNode;
+        pQueue->rear = nNode;
     }
-    count++;
+    pQueue->count++;
 }
 
 /* Dequeing the queue */
-struct process* deq()
+process* deq(queue *pQueue)
 {
-	struct queue *temp = NULL;
-	struct process *temp1;
-    struct queue *front1 = front;
-    if (front1 == NULL)
+	process *firstProcess;
+	node *newFront = pQueue->front;
+    if (newFront == NULL)
     {
-        return temp1;
+        return firstProcess;
     }
     else
-        if (front1->next != NULL)
+        if (newFront->next != NULL)
         {
-            front1 = front1->next;
-  			temp1 = front->current;
-            free(front);
-            front = front1;
+            newFront = newFront->next;
+  			firstProcess = pQueue->front->current;
+            free(pQueue->front);
+            pQueue->front = newFront;
         }
         else
         {
-    		temp1 = front->current;
-            free(front);
-            front = NULL;
-            rear = NULL;
+    		firstProcess = pQueue->front->current;
+            free(pQueue->front);
+            pQueue->front = NULL;
+            pQueue->rear = NULL;
         }
-        count--;
-        return temp1;
+        pQueue->count--;
+        return firstProcess;
 }
 
 /* Displaying the queue elements */
-void display_queue()
+void printQueue(queue *pQueue)
 {
-    struct queue *front1 = front;
+    node *currentNode = pQueue->front;
  
-    if ((front1 == NULL) && (rear == NULL))
+    if ((currentNode == NULL) && (pQueue->rear == NULL))
     {
         printf("Queue is empty");
         return;
     }
-    while (front1 != rear)
+    while (currentNode != pQueue->rear)
     {
-        print_data(front1->current);
-        front1 = front1->next;
+        printData(currentNode);
+        currentNode = currentNode->next;
     }
-    if (front1 == rear)
-        print_data(front1->current);
-    printf("\n-------------Queue size : %d-------------", queuesize());
+    if (currentNode == pQueue->rear)
+        printData(currentNode);
+    printf("\n-------------Queue size : %d-------------", getQueueSize(pQueue));
 }

@@ -5,49 +5,49 @@
 #ifndef PROCESS_H_   /* Include guard */
 #define PROCESS_H_
 
-struct process 
+typedef struct process 
 {
     int id;
     int burst;
     int state;
     int priority;
     struct timer *timer;
-};
+}process;
 
 /* Create a process */
-struct process* new_process(int pId, int pBurst,int pPriority);
+process* newProcess(int pId, int pBurst,int pPriority);
 
 /* Gets the process id */
-int get_id(struct process *pProcess);
+int getId(process *pProcess);
 
 /* Gets the process burst */
-int get_burst(struct process *pProcess);
+int getBurst(process *pProcess);
 
 /* Gets the process state */
-int get_state(struct process *pProcess);
+int getState(process *pProcess);
 
 /* Gets the process priority */
-int get_priority(struct process *pProcess);
+int getPriority(process *pProcess);
 
 /* 1 if the process is over 0 if it does't */
-int isOver(struct process *pProcess);
+int isOver(process *pProcess);
 
 /* Updates the state of a process */
-void update_state(struct process *pProcess,int pValue);
+void updateState(process *pProcess,int pValue);
 
 /* Gets the rest of the time that the process needs to finish */
-int get_needed_time(struct process *pProcess);
+int getNeededTime(process *pProcess);
 
 /* Gets the process Waiting Time */
-float get_WT(struct process *pProcess);
+float getWT(process *pProcess);
 
 /* Gets the process Turn-around Time */
-float get_TAT(struct process *pProcess);
+float getTAT(process *pProcess);
 
 /* Returns a string with information about the process */
-const char * to_string(struct process *pProcess);
+const char * processToString(process *pProcess);
 
 /* Prints the information of the process */
-void print_data(struct process *pProcess);
+void printProcess(process *pProcess);
 
 #endif // PROCESS_H_

@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = Source/process.o Source/queue.o Source/main.o Source/timer.o Source/client.o
-LINKOBJ  = Source/process.o Source/queue.o Source/main.o Source/timer.o Source/client.o
+OBJ      = Source/process.o Source/queue.o Source/main.o Source/timer.o Source/client.o Source/node.o
+LINKOBJ  = Source/process.o Source/queue.o Source/main.o Source/timer.o Source/client.o Source/node.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include/c++"
@@ -38,3 +38,6 @@ Source/timer.o: Source/timer.c
 
 Source/client.o: Source/client.c
 	$(CC) -c Source/client.c -o Source/client.o $(CFLAGS)
+
+Source/node.o: Source/node.c
+	$(CC) -c Source/node.c -o Source/node.o $(CFLAGS)
