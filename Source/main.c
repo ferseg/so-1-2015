@@ -1,45 +1,10 @@
-#include "../Headers/queue.h"
-#include "../Headers/timer.h"
-
+#include "../Headers/client.h"
 
 int main()
 {
-	struct timer *t1 = new_timer();
-	struct timer *t2 = new_timer();
+	struct client *c1 = new_client(1,0);
 	
-	printf("-----------------Testing Queue-----------------\n");
-	create();
-
-	enq(new_process(1,8,2));
-	enq(new_process(2,6,1));
-	enq(new_process(3,11,4));
-	enq(new_process(4,9,3));
-	enq(new_process(5,2,2));
-	display_queue();
+	printf("%d\n%d\n%d\n",get_type(c1),get_sorting_method(c1),get_status(c1));
 	
-	struct process *p = deq();
-	update_state(p,6);
-	enq(p);
-	
-	int i = 0;
-	while(i<100000000){
-		i++;
-	}i = 0;
-	
-	display_queue();
-
-//	int i = 0;
-//	while(i<100000000){
-//		i++;
-//	}i = 0;
-//	
-//	stop_timer(t1);
-//
-//	while(i<100000000){
-//		i++;
-//	}
-//	
-//	printf("\nTime taken %f seconds", get_timer(t1));
-//	printf("\nTime taken %f seconds", get_timer(t2));
 	return 0;
 }

@@ -1,4 +1,5 @@
 #include <time.h>
+#include <stdlib.h>
 
 #ifndef TIMER_H_   /* Include guard */
 #define TIMER_H_

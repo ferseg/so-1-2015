@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 #ifndef QUEUE_H_   /* Include guard */
 #define QUEUE_H_
 

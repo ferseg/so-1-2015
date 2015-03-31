@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "../Headers/timer.h"
 
 struct timer* new_timer(){
