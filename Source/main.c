@@ -18,7 +18,7 @@ int main()
 	display_queue();
 	
 	struct process *p = deq();
-	update_state(p,8);
+	update_state(p,6);
 	enq(p);
 	
 	int i = 0;
@@ -27,7 +27,7 @@ int main()
 	}i = 0;
 	
 	display_queue();
-	
+
 //	int i = 0;
 //	while(i<100000000){
 //		i++;

@@ -31,6 +31,12 @@ int get_priority(struct process *pProcess){
 	return pProcess->priority;
 }
 
+int isOver(struct process *pProcess){
+	if(pProcess->burst == pProcess->state)
+		return 1;
+	return 0;
+}
+
 void update_state(struct process *pProcess,int pValue){
 	pProcess->state += pValue;
 	if(pProcess->burst == pProcess->state){
@@ -38,16 +44,27 @@ void update_state(struct process *pProcess,int pValue){
 	}
 }
 
+int get_needed_time(struct process *pProcess){
+	return pProcess->burst - pProcess->state;
+}
+
+float get_WT(struct process *pProcess){
+	return get_timer(pProcess->timer) - pProcess->burst;
+}
+
+float get_TAT(struct process *pProcess){
+	return get_timer(pProcess->timer);
+}
+
 const char * to_string(struct process *pProcess)
 {
 	char *str;
-	asprintf(&str, "ID: %d\nBurst: %d\nState: %d/%d\nPriority: %d\nWaiting Time: %f\n",
+	asprintf(&str, "ID: %d\nBurst: %d\nState: %d/%d\nPriority: %d\n",
 			pProcess->id,
 			pProcess->burst,
 			pProcess->state,
 			pProcess->burst,
-			pProcess->priority,
-			get_timer(pProcess->timer));
+			pProcess->priority);
     return str;
 }
 
