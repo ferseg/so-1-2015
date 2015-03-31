@@ -18,8 +18,14 @@ int main()
 	display_queue();
 	
 	struct process *p = deq();
-	update_state(p,2);
+	update_state(p,8);
 	enq(p);
+	
+	int i = 0;
+	while(i<100000000){
+		i++;
+	}i = 0;
+	
 	display_queue();
 	
 //	int i = 0;
@@ -31,7 +37,7 @@ int main()
 //
 //	while(i<100000000){
 //		i++;
-//	}i = 0;
+//	}
 //	
 //	printf("\nTime taken %f seconds", get_timer(t1));
 //	printf("\nTime taken %f seconds", get_timer(t2));

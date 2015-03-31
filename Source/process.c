@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../Headers/timer.h"
 #include "../Headers/process.h"
+
 
 struct process* new_process(int pId, int pBurst,int pPriority) {
 	struct process *p = (struct process*)malloc(sizeof(struct process));
@@ -9,6 +11,7 @@ struct process* new_process(int pId, int pBurst,int pPriority) {
   	p->burst = pBurst;
   	p->state = 0;
 	p->priority = pPriority;
+	p->timer = new_timer();
 	return p;
 }
 
@@ -30,17 +33,21 @@ int get_priority(struct process *pProcess){
 
 void update_state(struct process *pProcess,int pValue){
 	pProcess->state += pValue;
+	if(pProcess->burst == pProcess->state){
+		stop_timer(pProcess->timer);
+	}
 }
 
 const char * to_string(struct process *pProcess)
 {
 	char *str;
-	asprintf(&str, "ID value: %d\nBurst value: %d\nState: %d/%d\nPriority value: %d\n",
+	asprintf(&str, "ID: %d\nBurst: %d\nState: %d/%d\nPriority: %d\nWaiting Time: %f\n",
 			pProcess->id,
 			pProcess->burst,
 			pProcess->state,
 			pProcess->burst,
-			pProcess->priority);
+			pProcess->priority,
+			get_timer(pProcess->timer));
     return str;
 }
 

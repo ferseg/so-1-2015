@@ -12,14 +12,6 @@ void stop_timer(struct timer *pTimer){
 	pTimer->stop = (float)(clock() - (clock_t)pTimer->start) / CLOCKS_PER_SEC;
 }
 
-clock_t get_start(struct timer *pTimer){
-	return pTimer->start;
-}
-
-float get_stop(struct timer *pTimer){
-	return pTimer->stop;
-}
-
 float get_timer(struct timer *pTimer){
 	float msec;
 	if(pTimer->stop >= 0){
@@ -28,7 +20,6 @@ float get_timer(struct timer *pTimer){
 	else{
 		msec = (float)(clock() - (clock_t)pTimer->start) / CLOCKS_PER_SEC;	
 	}
-	printf("\nTime taken %f seconds", msec);
 	return msec;
 }
 
