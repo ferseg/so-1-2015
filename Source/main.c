@@ -4,8 +4,9 @@
 int main()
 {
 	client *c1 = newClient(1,0);
-	printf("%d\n%d\n%d\n",getType(c1),getSortingMethod(c1),getStatus(c1));
-
+	startAutomaticClient(c1);
+	stopClient(c1);
+	
 //	queue *q = newQueue();
 //	enq(q,newProcess(1,8,2));
 //	enq(q,newProcess(2,6,3));
