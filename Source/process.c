@@ -1,46 +1,67 @@
-#include "process.h"
+#include "../Headers/process.h"
 
-struct process* new_process(int pId, int pBurst,int pPriority) {
-	struct process *p = (struct process*)malloc(sizeof(struct process));
-  	p->id = pId;
-  	p->burst = pBurst;
-  	p->state = 0;
-	p->priority = pPriority;
-	return p;
+process* newProcess(int pId, int pBurst,int pPriority) {
+	process *newProcess = malloc(sizeof(process));
+  	newProcess->id = pId;
+  	newProcess->burst = pBurst;
+  	newProcess->state = 0;
+	newProcess->priority = pPriority;
+	newProcess->timer = newTimer();
+	return newProcess;
 }
 
-int get_id(struct process *pProcess){
+int getId(process *pProcess){
 	return pProcess->id;
 }
 
-int get_burst(struct process *pProcess){
+int getBurst(process *pProcess){
 	return pProcess->burst;
 }
 
-int get_state(struct process *pProcess){
+int getState(process *pProcess){
 	return pProcess->state;
 }
 
-int get_priority(struct process *pProcess){
+int getPriority(process *pProcess){
 	return pProcess->priority;
 }
 
-void update_state(struct process *pProcess,int pValue){
-	pProcess->state += pValue;
+int isOver(process *pProcess){
+	if(pProcess->burst == pProcess->state)
+		return 1;
+	return 0;
 }
 
-const char * to_string(struct process *pProcess)
-{
+void updateState(process *pProcess,int pValue){
+	pProcess->state += pValue;
+	if(pProcess->burst == pProcess->state){
+		stopTimer(pProcess->timer);
+	}
+}
+
+int getNeededTime(process *pProcess){
+	return pProcess->burst - pProcess->state;
+}
+
+float getWT(process *pProcess){
+	return getTimer(pProcess->timer) - pProcess->burst;
+}
+
+float getTAT(process *pProcess){
+	return getTimer(pProcess->timer);
+}
+
+const char * processToString(process *pProcess){
 	char *str;
-	asprintf(&str, "ID value: %d\nBurst value: %d\nState: %d/%d\nPriority value: %d\n",
+	asprintf(&str, "ID: %d\nBurst: %d\nState: %d/%d\nPriority: %d\n",
 			pProcess->id,
 			pProcess->burst,
 			pProcess->state,
 			pProcess->burst,
 			pProcess->priority);
-	return str;
+    return str;
 }
 
-void print_data(struct process *pProcess){
-	printf("%s\n",to_string(pProcess));
+void printProcess(process *pProcess){
+	printf("%s\n",processToString(pProcess));
 }
