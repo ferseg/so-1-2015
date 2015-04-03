@@ -65,3 +65,7 @@ const char * processToString(process *pProcess){
 void printProcess(process *pProcess){
 	printf("%s\n",processToString(pProcess));
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
