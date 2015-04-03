@@ -8,7 +8,7 @@ node* newNode(process *pProcess){
     return newNode;
 }
 
-void setNext(node *curNode,node *nextNode){
+void setNext(node *curNode, node *nextNode){
 	curNode->next = nextNode;
 }
 
