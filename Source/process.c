@@ -66,6 +66,10 @@ void printProcess(process *pProcess){
 	printf("%s\n",processToString(pProcess));
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> master
+=======
+
+>>>>>>> ken-dev
