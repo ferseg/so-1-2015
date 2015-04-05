@@ -8,11 +8,7 @@ node* newNode(process *pProcess){
     return newNode;
 }
 
-<<<<<<< HEAD
 void setNext(node *curNode, node *nextNode){
-=======
-void setNext(node *curNode,node *nextNode){
->>>>>>> ken-dev
 	curNode->next = nextNode;
 }
 

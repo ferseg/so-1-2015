@@ -21,7 +21,3 @@ float getTimer(timer *pTimer){
 	}
 	return msec;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> ken-dev
