@@ -80,5 +80,5 @@ void printQueue(queue *pQueue)
     }
     if (currentNode == pQueue->rear)
         printData(currentNode);
-    printf("\n-------------Queue size : %d-------------", getQueueSize(pQueue));
+    printf("\n-------------Queue size : %d-------------\n", getQueueSize(pQueue));
 }
