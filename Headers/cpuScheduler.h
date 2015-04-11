@@ -11,6 +11,9 @@
 
 #define RUNNING 1
 #define STOPPED 0
+// The sleep for the mini burst
+#define MINI_BURST_SLEEP 1
+#define EXIT_WO_ERROR 0
 
 typedef struct {
 	unsigned short int algorithm;
@@ -35,6 +38,10 @@ void* initCPU(void *scheduler);
 void executeProcess(process* proc);
 
 process* searchForProcess(cpuScheduler_t *scheduler);
+
+process* getLower(cpuScheduler_t*);
+
+int isLower(int, int);
 
 
 #endif // CPU_SCHEDULER_H_

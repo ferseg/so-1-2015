@@ -6,6 +6,8 @@
 #ifndef QUEUE_H_   /* Include guard */
 #define QUEUE_H_
 
+#define EMPTY 0
+
 typedef struct queue 
 {
     node *front;

@@ -5,6 +5,13 @@
 */
 #include "../Headers/cpuScheduler.h"
 
+/**
+ * Creates a new CPUScheduler that contains the ready queue and 
+ * the algorithm of selection
+ * @param  ready     Queue of processes
+ * @param  algorithm The algorithm to select the best process
+ * @return           A CPUScheduler
+ */
 cpuScheduler_t* createCPU(queue *ready, int algorithm) {
 	cpuScheduler_t *scheduler = malloc(sizeof(cpuScheduler_t));
 	scheduler->ready = ready;
@@ -19,32 +26,44 @@ cpuScheduler_t* createCPU(queue *ready, int algorithm) {
 void* initCPU(void *scheduler) {
 	cpuScheduler_t *cpuSch = (cpuScheduler_t *) scheduler;
 	cpuSch->running = RUNNING;
-	//while(cpuSch->running) {
+	while(cpuSch->running) {
 		process *actual = searchForProcess(cpuSch);
-		//printProcess(actual);
-		//sleep(actual->burst);
-	//	if(cpuSch->ready->count == 0) {
-	//		cpuSch->running = STOPPED;
-	//	}
-	//}
-	pthread_exit(0);
+		// Chooses the burst to execute if the algorithm is RR
+		// then it executes the quantum and updates its state
+		int burst = actual->burst;
+		if (cpuSch->algorithm == ROUND_ROBIN) {
+			// TODO with quantum burst = quantum
+		}
+		int miniBurst = EMPTY;
+		while(miniBurst++ < burst) {
+			sleep(MINI_BURST_SLEEP);
+		}
+		// Updates the actual state
+		actual->state += miniBurst;
+		// TODO: Enq if RR
+		if(cpuSch->ready->count == EMPTY) {
+			cpuSch->running = STOPPED;
+		}
+	}
+	// Sends a signal to tell that the thread has finished
+	pthread_exit(EXIT_WO_ERROR);
 }
+
 
 process* searchForProcess(cpuScheduler_t *scheduler) {
 	queue *ready = scheduler->ready;
 	process* best;
 	switch(scheduler->algorithm) {
+		// For FIFO AND RR the algorithm is a simple dequeue
 		case FIFO:
-			best = deq(ready);
-			break;
-		case SJF:
-			best = deq(ready);
-			break;
-		case HPF:
-			best = deq(ready);
-			break;
 		case ROUND_ROBIN:
 			best = deq(ready);
+			break;
+		// SJF and HPF has the same algorithm to select the
+		// proccess to be executed.
+		case SJF:
+		case HPF:
+			best = getLower(scheduler);
 			break;
 	}
 	return best;
@@ -52,8 +71,8 @@ process* searchForProcess(cpuScheduler_t *scheduler) {
 
 /**
  * Gets the process with the lower measure depending on the algorithm
- * @param  scheduler [description]
- * @return           [description]
+ * @param  scheduler The scheduler that has the ready on it
+ * @return           The lowest process depending on the algorithm
  */
 process* getLower(cpuScheduler_t *scheduler) {
 	queue *ready = scheduler->ready;
@@ -64,24 +83,31 @@ process* getLower(cpuScheduler_t *scheduler) {
 	int i = 1;
 	while(i++ < ready->count) {
 		if(actual != NULL) {
-			int a;
-			int b;
+			int actualValue;
+			int lastValue;
 			process *actualProcess = actual->current;
 			switch (algorithm) {
+				// For SJF the scheduler must search with burst criteria
 				case SJF:
-					a = actualProcess->burst;
-					b = best->current->burst;
+					actualValue = actualProcess->burst;
+					lastValue = best->current->burst;
 					break;
+				// For SJF the scheduler must search with priority criteria
 				case HPF:
-					a = actualProcess->priority;
-					b = best->current->priority;
+					actualValue = actualProcess->priority;
+					lastValue = best->current->priority;
 					break;
 			}
-			if(isLower(a, b)) {
+			// Changes if its 
+			if(isLower(actualValue, lastValue)) {
 				best = actual;
 			}
 		}
 		else {
+			// Remove the node from the queue
+			best->before->next = best->next;
+			best->next->before = best->before;
+			best->next, best->before = NULL;
 			return best->current;
 		}
 		actual = actual->next;
@@ -92,10 +118,10 @@ process* getLower(cpuScheduler_t *scheduler) {
 
 /**
  * Returns if a number is lower than other
- * @param  a The first number
- * @param  b The second number
- * @return TRUE if a is lower than b, FALSE otherwise
+ * @param  actualValue The first number
+ * @param  lastValue The second number
+ * @return TRUE if actualValue is lower than lastValue, FALSE otherwise
  */
-int isLower(int a, int b) {
-	return a < b;
+int isLower(int actualValue, int lastValue) {
+	return actualValue < lastValue;
 }
