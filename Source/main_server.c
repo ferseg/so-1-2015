@@ -1,6 +1,7 @@
 #include "../Headers/cpuScheduler.h"
 #include "pthread.h"
 #include "../Headers/process.h"
+#include "../Headers/jobScheduler.h"
 
 #define PRINT 1
 
@@ -8,17 +9,22 @@ int main() {
 	// TODO: Change by enq with process of the client side
 	queue *q = newQueue();
 	int i;
-	int j = 100;
-	for (i = 0; i < 100; ++i)
+	int j = 11;
+	for (i = 0; i < 10; ++i)
 	{
-		process *np = newProcess(i, i, i);
-		enq(q, np);
+		process *np = newProcess(i, j-i, i);
+		printf("%s %d\n", "Enq #:", i);
+		// jobScheduler.h
+		insertProcess(q, np, ROUND_ROBIN);
 	}
-	process *np = newProcess(2,3,5);
+	printf("%s\n", "After insert");
+	process *np = newProcess(2,1000,5);
+	insertProcess(q, np, ROUND_ROBIN);
 	int sizeofInt = sizeof(int);
 	pthread_t *thread = malloc(sizeof(pthread_t));
 	// Create CPU is called from cpuScheduler.h
-	cpuScheduler_t *cpu = createCPU(q, 1);
+	cpuScheduler_t *cpu = createCPU(q, ROUND_ROBIN);
+	cpu->quantum = 2;
 	pthread_create(&thread, NULL, initCPU, (void *) cpu);
 
 	int selectedOption;
@@ -44,6 +50,6 @@ int main() {
 	} while(cpu->running);
 
 	pthread_join(thread, NULL);
-	printProcess(getLower(cpu));
+	printProcess(cpu->ready->rear->current);
 	return 0;
 }

@@ -40,9 +40,7 @@ void executeProcess(process* proc);
 
 process* searchForProcess(cpuScheduler_t *scheduler);
 
-process* getLower(cpuScheduler_t*);
-
-int isLower(int, int);
+/*process* getLower(cpuScheduler_t*);*/
 
 int selectQuantum(process*, int);
 

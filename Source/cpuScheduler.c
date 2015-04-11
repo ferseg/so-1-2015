@@ -26,25 +26,28 @@ cpuScheduler_t* createCPU(queue *ready, int algorithm) {
 void* initCPU(void *scheduler) {
 	cpuScheduler_t *cpuSch = (cpuScheduler_t *) scheduler;
 	cpuSch->running = RUNNING;
+	int quantum = cpuSch->quantum;
 	while(cpuSch->running) {
-		process *actual = searchForProcess(cpuSch);
-		// Chooses the burst to execute if the algorithm is RR
-		// then it executes the quantum and updates its state
-		int burst = cpuSch->algorithm == ROUND_ROBIN ? 
-			selectQuantum(actual, cpuSch->quantum) : actual->burst;
-		int miniBurst = EMPTY;
-		while(miniBurst++ < burst) {
-			sleep(MINI_BURST_SLEEP);
-		}
-		// Updates the actual state
-		actual->state += miniBurst;
-		// The times on ready
-		actual->timesOnReady++;
-		if(cpuSch->algorithm == ROUND_ROBIN) {
-			enq(cpuSch->ready, actual);
-		}
-		if(cpuSch->ready->count == EMPTY) {
-			cpuSch->running = STOPPED;
+		if(cpuSch->ready->count != EMPTY) {
+			process *actual = deq(cpuSch->ready);//searchForProcess(cpuSch);
+			// Chooses the burst to execute if the algorithm is RR
+			// then it executes the quantum and updates its state
+			int burst = cpuSch->algorithm == ROUND_ROBIN ? 
+				selectQuantum(actual, quantum) : actual->burst;
+			int miniBurst = EMPTY;
+			while(miniBurst < burst) {
+				sleep(MINI_BURST_SLEEP);
+				miniBurst++;
+			}
+			// Updates the actual state
+			actual->state += miniBurst;
+			printProcess(actual);
+			printf("burst: %d\n\n", burst);
+			// The times on ready
+			actual->timesOnReady++;
+			if(cpuSch->algorithm == ROUND_ROBIN && actual->burst != actual->state) {
+				enq(cpuSch->ready, actual);
+			}
 		}
 	}
 	// Sends a signal to tell that the thread has finished
@@ -69,7 +72,7 @@ int selectQuantum(process *actual, int quantum) {
 	return left;
 }
 
-process* searchForProcess(cpuScheduler_t *scheduler) {
+/*process* searchForProcess(cpuScheduler_t *scheduler) {
 	queue *ready = scheduler->ready;
 	process* best;
 	switch(scheduler->algorithm) {
@@ -93,7 +96,7 @@ process* searchForProcess(cpuScheduler_t *scheduler) {
  * @param  scheduler The scheduler that has the ready on it
  * @return           The lowest process depending on the algorithm
  */
-process* getLower(cpuScheduler_t *scheduler) {
+/*process* getLower(cpuScheduler_t *scheduler) {
 	queue *ready = scheduler->ready;
 	// The best is the first node initially
 	node *best = ready->front;
@@ -131,16 +134,9 @@ process* getLower(cpuScheduler_t *scheduler) {
 		}
 		actual = actual->next;
 	}
+	// Remove the node from the queue
+	best->before->next = best->next;
+	best->next->before = best->before;
+	best->next, best->before = NULL;
 	return best->current;
-	// TODO: Sets the before and the next.
-}
-
-/**
- * Returns if a number is lower than other
- * @param  actualValue The first number
- * @param  lastValue The second number
- * @return TRUE if actualValue is lower than lastValue, FALSE otherwise
- */
-int isLower(int actualValue, int lastValue) {
-	return actualValue < lastValue;
-}
+}*/
