@@ -21,7 +21,7 @@ cpuScheduler_t* createCPU(queue *ready, int algorithm) {
 
 /**
  * Inititates to execute the cpu scheduler
- * @param the sc
+ * @param scheduler
  */
 void* initCPU(void *scheduler) {
 	cpuScheduler_t *cpuSch = (cpuScheduler_t *) scheduler;
@@ -30,17 +30,19 @@ void* initCPU(void *scheduler) {
 		process *actual = searchForProcess(cpuSch);
 		// Chooses the burst to execute if the algorithm is RR
 		// then it executes the quantum and updates its state
-		int burst = actual->burst;
-		if (cpuSch->algorithm == ROUND_ROBIN) {
-			// TODO with quantum burst = quantum
-		}
+		int burst = cpuSch->algorithm == ROUND_ROBIN ? 
+			selectQuantum(actual, cpuSch->quantum) : actual->burst;
 		int miniBurst = EMPTY;
 		while(miniBurst++ < burst) {
 			sleep(MINI_BURST_SLEEP);
 		}
 		// Updates the actual state
 		actual->state += miniBurst;
-		// TODO: Enq if RR
+		// The times on ready
+		actual->timesOnReady++;
+		if(cpuSch->algorithm == ROUND_ROBIN) {
+			enq(cpuSch->ready, actual);
+		}
 		if(cpuSch->ready->count == EMPTY) {
 			cpuSch->running = STOPPED;
 		}
@@ -49,6 +51,23 @@ void* initCPU(void *scheduler) {
 	pthread_exit(EXIT_WO_ERROR);
 }
 
+/**
+ * Selects the burst of the process evaluating its burst
+ * if the left burst is lower than the quantum then returns the
+ * left burst
+ * @param  actual  The actual process
+ * @param  quantum The quantum
+ * @return         quantum if left burst is higher, left otherwise
+ */
+int selectQuantum(process *actual, int quantum) {
+	int burst = actual->burst;
+	int state = actual->state;
+	int left = burst - state;
+	if (left > quantum) {
+		return quantum;
+	}
+	return left;
+}
 
 process* searchForProcess(cpuScheduler_t *scheduler) {
 	queue *ready = scheduler->ready;

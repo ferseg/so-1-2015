@@ -18,6 +18,7 @@
 typedef struct {
 	unsigned short int algorithm;
 	unsigned short int running;
+	unsigned short int quantum;
 	struct queue *ready;
 } cpuScheduler_t;
 
@@ -43,5 +44,6 @@ process* getLower(cpuScheduler_t*);
 
 int isLower(int, int);
 
+int selectQuantum(process*, int);
 
 #endif // CPU_SCHEDULER_H_
