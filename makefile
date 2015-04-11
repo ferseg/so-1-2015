@@ -2,9 +2,11 @@
 # makefile
 # Author: Fernando Segovia Salgado
 FILES = Source/main.c Source/client.c Source/queue.c Source/process.c Source/node.c Source/timer.c 
+CLIENT_FILES = Source/main.c Source/client.c Source/queue.c Source/process.c Source/node.c Source/timer.c 
 CFLAGS = -I ../Hearders #-Wall
 CC = gcc
-PROG_NAME = bin/client
+PROG_NAME = bin/server
+CLIENT_NAME = bin/client
 LIBS = -lpthread -lm
 
 clear_screen: program
@@ -12,3 +14,6 @@ clear_screen: program
 
 program: 
 	$(CC) $(CFLAGS) $(FILES) -o $(PROG_NAME) $(LIBS)
+
+start_client:
+	$(CC) $(CFLAGS) $(CLIENT_FILES) -o $(CLIENT_NAME) $(LIBS)

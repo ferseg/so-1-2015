@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <string.h>    //strlen
+#include <sys/socket.h>    //socket
+#include <arpa/inet.h> //inet_addr
+
 
 #ifndef CLIENT_H_   /* Include guard */
 #define CLIENT_H_
