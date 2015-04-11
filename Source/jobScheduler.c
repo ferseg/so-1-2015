@@ -7,7 +7,6 @@ void listen(char *info) {
 void insertProcess(queue *ready, process *proc, int algorithm) {
 	node *actual = ready->front;	
 	if(actual == NULL || algorithm == FIFO || algorithm == ROUND_ROBIN) {
-		printf("%s\n", "First enq");
 		enq(ready, proc);
 		return;
 	}

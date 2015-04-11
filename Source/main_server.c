@@ -9,17 +9,13 @@ int main() {
 	// TODO: Change by enq with process of the client side
 	queue *q = newQueue();
 	int i;
-	int j = 11;
+	int j = 6;
 	for (i = 0; i < 5; ++i)
 	{
 		process *np = newProcess(i, j-i, i);
-		printf("%s %d\n", "Enq #:", i);
 		// jobScheduler.h
 		insertProcess(q, np, ROUND_ROBIN);
 	}
-	printf("%s\n", "After insert");
-	process *np = newProcess(2,33,5);
-	insertProcess(q, np, ROUND_ROBIN);
 	int sizeofInt = sizeof(int);
 	pthread_t *thread = malloc(sizeof(pthread_t));
 	// Create CPU is called from cpuScheduler.h
@@ -50,6 +46,5 @@ int main() {
 	} while(cpu->running);
 
 	pthread_join(thread, NULL);
-	printProcess(cpu->ready->rear->current);
 	return 0;
 }

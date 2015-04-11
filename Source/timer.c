@@ -2,22 +2,18 @@
 
 timer* newTimer(){
 	timer *nt = malloc(sizeof(timer));
-	nt->start = clock();
-	nt->stop = -1;
+	time(&nt->start);
+	nt->stop = NULL;
 	return nt;
 }
 
 void stopTimer(timer *pTimer){
-	pTimer->stop = (float)(clock() - (clock_t)pTimer->start) / CLOCKS_PER_SEC;
+	if(pTimer->stop == NULL) {
+		time(&pTimer->stop);
+	}
 }
 
 float getTimer(timer *pTimer){
-	float msec;
-	if(pTimer->stop >= 0){
-		msec = pTimer->stop;
-	}
-	else{
-		msec = (float)(clock() - (clock_t)pTimer->start) / CLOCKS_PER_SEC;	
-	}
-	return msec;
+	stopTimer(pTimer);
+	return difftime(pTimer->stop, pTimer->start);
 }

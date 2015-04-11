@@ -27,10 +27,22 @@ void* initCPU(void *scheduler) {
 	cpuScheduler_t *cpuSch = (cpuScheduler_t *) scheduler;
 	cpuSch->running = RUNNING;
 	int quantum = cpuSch->quantum;
+	int sumBurst = EMPTY;
+	int totalProcess = EMPTY;
+	float totalTAT;
+	float totalWT;
 	queue *tmpReady = newQueue();
+	// Opens a file "fileManager.h"
+	FILE *timingFile = openFile(TIMING_FILE, LOG_FILE_OPTIONS);
+	writeInFile(timingFile, "Proceso \t|\tTAT \t|\tWT");
 	while(cpuSch->running) {
 		if(cpuSch->ready->count != EMPTY) {
-			process *actual = deq(cpuSch->ready);//searchForProcess(cpuSch);
+			process *actual = deq(cpuSch->ready);
+
+			/*sprintf(detail, "Proceso: %d con burst: %d y prioridad: %d entra en ejecucion\n", 
+						actual->id, actual->burst, actual->priority);
+			// Writes in the log file "fileManager.h"
+			writeInFile(timingFile, detail);*/
 			// Chooses the burst to execute if the algorithm is RR
 			// then it executes the quantum and updates its state
 			int burst = cpuSch->algorithm == ROUND_ROBIN ? 
@@ -43,10 +55,18 @@ void* initCPU(void *scheduler) {
 			// Updates the actual state
 			actual->state += miniBurst;
 			printProcess(actual);
-			printf("burst: %d\n\n", burst);
-			// The times on ready
-			actual->timesOnReady++;
-			if(cpuSch->algorithm == ROUND_ROBIN && actual->burst != actual->state) {
+			int actualBurst = actual->burst;
+			if(actualBurst == actual->state) {
+				float tat = getTAT(actual);
+				float wt = tat - actualBurst;
+				totalTAT += tat;
+				totalWT += wt;
+				printf("total wt: %.2f\n", totalWT);
+				totalProcess++;
+				sumBurst += actualBurst;
+				saveProcessEndingInfo(actual, timingFile, tat, wt);
+			}
+			else if(cpuSch->algorithm == ROUND_ROBIN) {
 				enq(tmpReady, actual);
 			}
 		}
@@ -54,8 +74,29 @@ void* initCPU(void *scheduler) {
 			cpuSch->ready = tmpReady;
 		}
 	}
+	float avgTAT = totalTAT / totalProcess;
+	float avgWT = totalWT / totalProcess;
+	char *detail = malloc(sizeof(char)*100);
+	sprintf(detail, "Total: %d \t|\t%.2f \t|\t%.2f", totalProcess, avgTAT, avgWT);
+	writeInFile(timingFile, "------------------------------------------------");
+	writeInFile(timingFile, detail);
+	// Closes the file "fileManager.h"
+	closeFile(timingFile);
 	// Sends a signal to tell that the thread has finished
 	pthread_exit(EXIT_WO_ERROR);
+}
+
+/**
+ * Saves the information of a process when it ends its execution
+ * @param proc The process that will be saved
+ * @param file The file in which the information will be saved
+ * @param tat  Turn Around Time
+ * @param wt   Wating Time
+ */
+void saveProcessEndingInfo(process *proc, FILE *file, float tat, float wt) {
+	char *detail = malloc(sizeof(char)*700);
+	sprintf(detail, "Proc: %d \t|\t%.0f \t|\t%.0f", proc->id, tat, wt);
+	writeInFile(file, detail);
 }
 
 /**

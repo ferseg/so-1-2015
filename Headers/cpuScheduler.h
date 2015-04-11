@@ -5,6 +5,7 @@
 */
 #include "queue.h"
 #include "algorithms.h"
+#include "fileManager.h"
 #include <unistd.h>
 #ifndef CPU_SCHEDULER_H_
 #define CPU_SCHEDULER_H_
@@ -14,6 +15,11 @@
 // The sleep for the mini burst
 #define MINI_BURST_SLEEP 1
 #define EXIT_WO_ERROR 0
+
+// To write in the file
+#define LOG_FILE "log_file.txt"
+#define LOG_FILE_OPTIONS "w"
+#define TIMING_FILE "timing.txt"
 
 typedef struct {
 	unsigned short int algorithm;
@@ -41,6 +47,8 @@ void executeProcess(process* proc);
 process* searchForProcess(cpuScheduler_t *scheduler);
 
 /*process* getLower(cpuScheduler_t*);*/
+
+void saveProcessEndingInfo(process* proc, FILE *file, float tat, float wt);\
 
 int selectQuantum(process*, int);
 

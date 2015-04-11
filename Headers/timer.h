@@ -4,8 +4,8 @@
 #define TIMER_H_
 
 typedef struct timer{
-	clock_t *start;
-	float stop;
+	time_t start;
+	time_t stop;
 }timer;
 
 timer* newTimer();

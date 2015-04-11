@@ -11,7 +11,6 @@ typedef struct process
     int priority;
     int burst;
     int state;
-    int timesOnReady;
     struct timer *timer;
 }process;
 
