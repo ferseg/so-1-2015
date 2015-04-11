@@ -2,7 +2,6 @@
 #include "pthread.h"
 #include "../Headers/process.h"
 
-#define EXIT 0
 #define PRINT 1
 
 int main() {
@@ -14,8 +13,10 @@ int main() {
 		process *np = newProcess(i, 3, i);
 		enq(q, np);
 	}
+	process *np = newProcess(2,3,5);
+	int sizeofInt = sizeof(int);
 	pthread_t *thread = malloc(sizeof(pthread_t));
-	cpuScheduler_t *cpu = createCPU(q, 1);
+	cpuScheduler_t *cpu = createCPU(q, 2);
 	pthread_create(&thread, NULL, initCPU, (void *) cpu);
 
 	int selectedOption;
@@ -36,7 +37,7 @@ int main() {
 			printQueue(cpu->ready);
 		}
 		else {
-			cpu->running = EXIT;
+			cpu->running = STOPPED;
 		}
 	} while(cpu->running);
 

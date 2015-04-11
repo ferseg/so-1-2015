@@ -8,9 +8,9 @@
 typedef struct process 
 {
     int id;
+    int priority;
     int burst;
     int state;
-    int priority;
     struct timer *timer;
 }process;
 
