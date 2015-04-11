@@ -51,7 +51,7 @@ process* deq(queue *pQueue)
   			firstProcess = pQueue->front->current;
             free(pQueue->front);
             pQueue->front = newFront;
-            pQueue->before = NULL;
+            pQueue->front->before = NULL;
         }
         else
         {
