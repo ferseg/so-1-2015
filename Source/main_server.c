@@ -8,15 +8,16 @@ int main() {
 	// TODO: Change by enq with process of the client side
 	queue *q = newQueue();
 	int i;
+	int j = 100;
 	for (i = 0; i < 100; ++i)
 	{
-		process *np = newProcess(i, 3, i);
+		process *np = newProcess(i, i, i);
 		enq(q, np);
 	}
 	process *np = newProcess(2,3,5);
 	int sizeofInt = sizeof(int);
 	pthread_t *thread = malloc(sizeof(pthread_t));
-	cpuScheduler_t *cpu = createCPU(q, 2);
+	cpuScheduler_t *cpu = createCPU(q, 1);
 	pthread_create(&thread, NULL, initCPU, (void *) cpu);
 
 	int selectedOption;
@@ -42,5 +43,6 @@ int main() {
 	} while(cpu->running);
 
 	pthread_join(thread, NULL);
+	printProcess(getLower(cpu));
 	return 0;
 }

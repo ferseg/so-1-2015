@@ -70,20 +70,21 @@ process* getLower(cpuScheduler_t *scheduler) {
 			switch (algorithm) {
 				case SJF:
 					a = actualProcess->burst;
-					b = best->burst;
+					b = best->current->burst;
 					break;
 				case HPF:
 					a = actualProcess->priority;
-					b = best->priority;
+					b = best->current->priority;
 					break;
 			}
 			if(isLower(a, b)) {
-				actualProcess = best;
+				best = actual;
 			}
 		}
 		else {
 			return best->current;
 		}
+		actual = actual->next;
 	}
 	return best->current;
 	// TODO: Sets the before and the next.
