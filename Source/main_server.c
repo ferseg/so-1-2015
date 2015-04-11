@@ -17,6 +17,7 @@ int main() {
 	process *np = newProcess(2,3,5);
 	int sizeofInt = sizeof(int);
 	pthread_t *thread = malloc(sizeof(pthread_t));
+	// Create CPU is called from cpuScheduler.h
 	cpuScheduler_t *cpu = createCPU(q, 1);
 	pthread_create(&thread, NULL, initCPU, (void *) cpu);
 
