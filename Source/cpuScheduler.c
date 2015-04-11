@@ -27,6 +27,7 @@ void* initCPU(void *scheduler) {
 	cpuScheduler_t *cpuSch = (cpuScheduler_t *) scheduler;
 	cpuSch->running = RUNNING;
 	int quantum = cpuSch->quantum;
+	queue *tmpReady = newQueue();
 	while(cpuSch->running) {
 		if(cpuSch->ready->count != EMPTY) {
 			process *actual = deq(cpuSch->ready);//searchForProcess(cpuSch);
@@ -46,8 +47,11 @@ void* initCPU(void *scheduler) {
 			// The times on ready
 			actual->timesOnReady++;
 			if(cpuSch->algorithm == ROUND_ROBIN && actual->burst != actual->state) {
-				enq(cpuSch->ready, actual);
+				enq(tmpReady, actual);
 			}
+		}
+		else {
+			cpuSch->ready = tmpReady;
 		}
 	}
 	// Sends a signal to tell that the thread has finished

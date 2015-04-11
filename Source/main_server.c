@@ -10,7 +10,7 @@ int main() {
 	queue *q = newQueue();
 	int i;
 	int j = 11;
-	for (i = 0; i < 10; ++i)
+	for (i = 0; i < 5; ++i)
 	{
 		process *np = newProcess(i, j-i, i);
 		printf("%s %d\n", "Enq #:", i);
@@ -18,7 +18,7 @@ int main() {
 		insertProcess(q, np, ROUND_ROBIN);
 	}
 	printf("%s\n", "After insert");
-	process *np = newProcess(2,1000,5);
+	process *np = newProcess(2,33,5);
 	insertProcess(q, np, ROUND_ROBIN);
 	int sizeofInt = sizeof(int);
 	pthread_t *thread = malloc(sizeof(pthread_t));
