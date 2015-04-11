@@ -7,6 +7,7 @@
 typedef struct node
 {
     process *current;
+    struct node *before;
     struct node *next;
 }node;
 
