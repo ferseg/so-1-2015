@@ -26,7 +26,7 @@ void startAutomaticClient(client *pClient){
 	pthread_t stopClientThread;
 	int burst,priority,waiting = 0;
 	printf("Press a key to start the client and then any key to stop it.");
-	getch();
+	getchar();
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
 	while(pClient->status){
 		burst = getRandomNumber(1,MAX_BURST);
@@ -53,7 +53,7 @@ int getRandomNumber(int pMinNum, int pMaxNum){
 /* Thread that controls the status of the client */
 void stopClient(client *pClient){
 	if(pClient->status){
-		getch();
+		getchar();
 		printf("\nClient stopped by user.\n");
 		turnOffClient(pClient);
 	}
