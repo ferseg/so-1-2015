@@ -1,5 +1,4 @@
 #include "../Headers/client.h"
-#include "../Headers/socket.h"
 
 client* newClient(int pType, int pSortingMethod){
 	client *nc = malloc(sizeof(client));
@@ -17,12 +16,12 @@ int getRandomNumber(int pMinNum, int pMaxNum){
 void stopClient(client *pClient){
 	if(pClient->status){
 		char input;
-  	    printf("\nPress Enter to stop the client \n");
+  	    printf("\nIngrese la letra s para detener el cliente.\n");
 		do{
 			scanf("%c", & input);
 		    if (input == 's') {
 		    	pClient->status = 0;
-				printf("\nClient stopped by user.\n");
+				printf("\nCliente detenido por el usuario.\n");
 		    	break;
 			}
 		}while (input != 's');
@@ -96,22 +95,19 @@ int selectAlgorithm(){
 
 void startAutomaticClient(client *pClient){
 	int id = 1;
+	char *message;
 	pClient->status = 1;
 	pthread_t stopClientThread;
 	int burst,priority,waiting = 0;
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
 	if(testConnection()){
-		
-		char *str;
-		asprintf(&str,"%d",pClient->sortingMethod);
-		sendDataToServer(str);
-
+		asprintf(&message,"%d",pClient->sortingMethod);
+		sendDataToServer(message);
 		while(pClient->status){
 			burst = getRandomNumber(1,MAX_BURST);
 			priority = getRandomNumber(1,MAX_PRIORITY);
 			waiting = getRandomNumber(1,MAX_WAIT);
 			if(pClient->status){
-				char *message;
 				asprintf(&message,"%d %d %d ",id,burst,priority);
 				sendDataToServer(message);
 			}
@@ -124,6 +120,10 @@ void startAutomaticClient(client *pClient){
 
 void startManualClient(client *pClient){
 	pClient->status = 1;
+	pthread_t stopClientThread;
+	int burst,priority,waiting = 0;
+	pthread_create(&stopClientThread, NULL, stopClient, pClient);
 	/* to-do */
+	//FILE *file = openFile("/home/ken/Desktop/input.txt", 'r');
+	//closeFile(file);
 }
-

@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-
 #include <string.h>    //strlen
 #include <sys/socket.h>    //socket
 #include <arpa/inet.h> //inet_addr
+#include "../Headers/socket.h"
+#include "../Headers/fileManager.h"
 
 #ifndef CLIENT_H_   /* Include guard */
 #define CLIENT_H_

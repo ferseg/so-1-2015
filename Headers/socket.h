@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h> 
 #include <string.h>    //strlen
 #include <stdlib.h>    //strlen
 #include <sys/socket.h>
@@ -6,6 +6,7 @@
 #include <unistd.h>    //write
 #include <pthread.h> //for threading , link with lpthread
 #include "../Headers/queue.h"
+#include "../Headers/process.h"
 
 #ifndef SOCKET_H_   /* Include guard */
 #define SOCKET_H_
@@ -15,6 +16,8 @@
 int testConnection();
 
 void sendDataToServer(char *message);
+
+void sendDataToQueue(queue *nQueue);
 
 void getTokens(char *str,int *id,int *burst, int *priority);
 
