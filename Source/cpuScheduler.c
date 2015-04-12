@@ -31,7 +31,10 @@ void* initCPU(void *scheduler) {
 	int totalProcess = EMPTY;
 	float totalTAT;
 	float totalWT;
+	// Creates a temp ready (for RR) "queue.h"
 	queue *tmpReady = newQueue();
+	// Creates a timer to control idle CPU "timer.h"
+	timer *idle = newTimer();
 	// Opens a file "fileManager.h"
 	FILE *timingFile = openFile(TIMING_FILE, LOG_FILE_OPTIONS);
 	writeInFile(timingFile, "Proceso \t|\tTAT \t|\tWT");
@@ -57,7 +60,7 @@ void* initCPU(void *scheduler) {
 			printProcess(actual);
 			int actualBurst = actual->burst;
 			if(actualBurst == actual->state) {
-				float tat = getTAT(actual);
+				float tat = getTimer(actual->timer);
 				float wt = tat - actualBurst;
 				totalTAT += tat;
 				totalWT += wt;
@@ -77,8 +80,13 @@ void* initCPU(void *scheduler) {
 	float avgTAT = totalTAT / totalProcess;
 	float avgWT = totalWT / totalProcess;
 	char *detail = malloc(sizeof(char)*100);
-	sprintf(detail, "Total: %d \t|\t%.2f \t|\t%.2f", totalProcess, avgTAT, avgWT);
+	sprintf(detail, "Total: %d \t|\t%.2f \t|\t%.2f\n", totalProcess, avgTAT, avgWT);
 	writeInFile(timingFile, "------------------------------------------------");
+	writeInFile(timingFile, detail);
+	float totalTime = getTimer(idle);
+	float idleTime = totalTime - sumBurst;
+	detail = malloc(sizeof(char)*100);
+	sprintf(detail, "CPU Ocioso: %0.2f", idleTime);
 	writeInFile(timingFile, detail);
 	// Closes the file "fileManager.h"
 	closeFile(timingFile);
