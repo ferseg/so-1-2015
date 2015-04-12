@@ -36,28 +36,26 @@ void* initCPU(void *scheduler) {
 	// Creates a timer to control idle CPU "timer.h"
 	timer *idle = newTimer();
 	// Opens a file "fileManager.h"
-	FILE *timingFile = openFile(TIMING_FILE, LOG_FILE_OPTIONS);
+	FILE *timingFile = openFile(TIMING_FILE, WRITE_OPTION);
 	writeInFile(timingFile, "Proceso \t|\tTAT \t|\tWT");
 	while(cpuSch->running) {
-		if(cpuSch->ready->count != EMPTY) {
+		if(cpuSch->ready->count) {
 			process *actual = deq(cpuSch->ready);
-
-			/*sprintf(detail, "Proceso: %d con burst: %d y prioridad: %d entra en ejecucion\n", 
+			printf("\nProceso: %d con burst: %d y prioridad: %d entra en ejecucion\n", 
 						actual->id, actual->burst, actual->priority);
-			// Writes in the log file "fileManager.h"
-			writeInFile(timingFile, detail);*/
+
+			puts("\n[->] Seleccione una opción [1, 2]: ");
 			// Chooses the burst to execute if the algorithm is RR
 			// then it executes the quantum and updates its state
 			int burst = cpuSch->algorithm == ROUND_ROBIN ? 
 				selectQuantum(actual, quantum) : actual->burst;
 			int miniBurst = EMPTY;
-			while(miniBurst < burst) {
+			while(miniBurst < burst && cpuSch->running) {
 				sleep(MINI_BURST_SLEEP);
 				miniBurst++;
 			}
 			// Updates the actual state
 			actual->state += miniBurst;
-			printProcess(actual);
 			int actualBurst = actual->burst;
 			if(actualBurst == actual->state) {
 				float tat = getTimer(actual->timer);
@@ -72,19 +70,20 @@ void* initCPU(void *scheduler) {
 				enq(tmpReady, actual);
 			}
 		}
-		else {
+		else if (cpuSch->algorithm == ROUND_ROBIN) {
 			cpuSch->ready = tmpReady;
+			cpuSch->ready->count = tmpReady->count;
+			tmpReady = newQueue();
 		}
 	}
 	float avgTAT = totalTAT / totalProcess;
 	float avgWT = totalWT / totalProcess;
-	char *detail = malloc(sizeof(char)*100);
+	char *detail = malloc(sizeof(char)*200);
 	sprintf(detail, "Total: %d \t|\t%.2f \t|\t%.2f\n", totalProcess, avgTAT, avgWT);
 	writeInFile(timingFile, "------------------------------------------------");
 	writeInFile(timingFile, detail);
 	float totalTime = getTimer(idle);
 	float idleTime = totalTime - sumBurst;
-	detail = malloc(sizeof(char)*100);
 	sprintf(detail, "CPU Ocioso: %0.2f", idleTime);
 	writeInFile(timingFile, detail);
 	// Closes the file "fileManager.h"

@@ -18,7 +18,8 @@
 
 // To write in the file
 #define LOG_FILE "log_file.txt"
-#define LOG_FILE_OPTIONS "w"
+#define WRITE_OPTION "w"
+#define APPEND_OPTION "a"
 #define TIMING_FILE "timing.txt"
 
 typedef struct {

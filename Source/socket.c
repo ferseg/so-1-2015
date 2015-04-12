@@ -54,7 +54,7 @@ void *sendDataToQueue(void *cpuSch){
     
     //Create socket
     socket_desc = socket(AF_INET , SOCK_STREAM , 0);
-    puts("Socket created");
+    //puts("Socket created");
      
     //Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
@@ -63,31 +63,30 @@ void *sendDataToQueue(void *cpuSch){
      
     //Bind
     bind(socket_desc,(struct sockaddr *)&server , sizeof(server));
-    puts("bind done");
+    //puts("bind done");
      
     //Listen
     listen(socket_desc , 3);
      
     //Accept and incoming connection
-    puts("Waiting for incoming connections...");
+    //puts("Waiting for incoming connections...");
     c = sizeof(struct sockaddr_in);
      
     //accept connection from an incoming client
     client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
-    puts("Connection accepted");
+    //puts("Connection accepted");
     //Receive a message from client
     char client_message[MESSAGE_LEN]; //= malloc(sizeof(char)*MESSAGE_LEN);
+    pthread_t *thread = malloc(sizeof(pthread_t));
     while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) && cpu->running){
-        //puts("Connection accepted");
+        ////puts("Connection accepted");
         recv(client_sock , client_message , MESSAGE_LEN, 0);
         if(strlen(client_message) == 1){
             //////////////////////////////////////////////////////////
             // algoritmo para ordenar
-            printf("El algoritmo para ordenar es: %s\n",client_message);
             int algorithm = atoi(client_message);
             cpu->algorithm = algorithm > ROUND_ROBIN ? ROUND_ROBIN : algorithm;
             cpu->quantum = algorithm - ROUND_ROBIN;
-            pthread_t *thread = malloc(sizeof(pthread_t));
             pthread_create(&thread, NULL, initCPU, (void *) cpu);
             //////////////////////////////////////////////////////////
         }
@@ -103,6 +102,8 @@ void *sendDataToQueue(void *cpuSch){
             //////////////////////////////////////////
         }
     }
+    pthread_join(thread, NULL);
+    pthread_exit(EXIT_WO_ERROR);
 }
 
 void getTokens(char *str,int *id,int *burst, int *priority){

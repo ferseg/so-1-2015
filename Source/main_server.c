@@ -14,19 +14,19 @@ int main() {
 	//initCPU(cpu);
     pthread_t queueManagerThread;
     pthread_create(&queueManagerThread, NULL, sendDataToQueue, (void*)cpu);
-    
+    //sleep(20);
     int selectedOption;
 	// Menu
 	do {
 		printf("%s\n", "======= MENU =======");
-		printf("%s\n", "1. Print Ready");
-		printf("%s\n", "2. Exit");
-		printf("%s", "Choose an option: ");
+		printf("%s\n", "[1] Ver Ready");
+		printf("%s\n", "[2] Salir");
+		printf("%s", "Seleccione una opción: ");
 		scanf("%d", &selectedOption);
 		while(selectedOption < 0 || selectedOption > 2) {
-			printf("%s\n", "[!] Invalid option.");
+			printf("%s\n", "[!] Opción inválida.");
 			sleep(1);
-			printf("%s", "Choose an option: ");
+			printf("%s", "Seleccione una opción: ");
 			scanf("%d", &selectedOption);
 		}
 		if (selectedOption == PRINT) {
@@ -37,9 +37,7 @@ int main() {
 		}
 	} while(cpu->running);
 
-    sleep(20);
     pthread_join(queueManagerThread, NULL);
-    printf("Se acabó el tiempo :(\n");
 
 	/*queue *q = newQueue();
 	int i;
