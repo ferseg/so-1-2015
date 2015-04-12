@@ -10,6 +10,13 @@
 #ifndef SOCKET_H_   /* Include guard */
 #define SOCKET_H_
 
+typedef struct handlerArgs{
+	queue *pQueue;
+	void *socket_desc;
+}handlerArgs;
+
+handlerArgs* newArgs(void *socket_des,queue *pQueue);
+
 /* Create a client */
 int testConnection();
 
@@ -17,6 +24,6 @@ void sendDataToServer(char *message);
 
 void getTokens(char *str,int *id,int *burst, int *priority);
 
-void *connection_handler(void *socket_desc,queue *pQueue);
+void *connection_handler(handlerArgs *pArgs);
 
 #endif // SOCKET_H_

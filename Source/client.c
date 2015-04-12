@@ -25,28 +25,29 @@ void stopClient(client *pClient){
 
 void startClient(){
 	char menu;
-	do {
-	    printf("MAIN MENU\n");
-	    printf("[1] Cliente manual\n");
-	    printf("[2] Cliente Automático\n");
-	    printf("[3] Salir\n");
-	    printf("Seleccione una opción [1, 2, 3]: ");
-	    scanf("%c", &menu);
-	    if(menu != "3"){
-		    switch(menu){
-		        case '1':
+	// do {
+	//     printf("MAIN MENU\n");
+	//     printf("[1] Cliente manual\n");
+	//     printf("[2] Cliente Automático\n");
+	//     printf("[3] Salir\n");
+	//     printf("Seleccione una opción [1, 2, 3]: ");
+	//     scanf("%c", &menu);
+	//     if(menu != "3"){
+	// 	    switch(menu){
+	// 	        case '1':
 			        
-			        break;
-		        case '2':
+	// 		        break;
+	// 	        case '2':
 		            
-		            break;
-		        default:
-		            printf("Opción desconocida.\n\n");
-		            break;
-	    	}
-	    } // switch
-	} while(menu != '3');
-
+	// 	            break;
+	// 	        default:
+	// 	            printf("Opción desconocida.\n\n");
+	// 	            break;
+	//     	}
+	//     } // switch
+	// } while(menu != '3');
+	client *c1 = newClient(1,0);
+	startAutomaticClient(c1);
 
 
 

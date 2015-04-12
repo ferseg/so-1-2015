@@ -8,7 +8,7 @@
 #include <arpa/inet.h> //inet_addr
 #include <unistd.h>    //write
 #include <pthread.h> //for threading , link with lpthread
-#include "..Headers/socket.h"
+#include "../Headers/socket.h"
 
 int main(int argc , char *argv[])
 {
@@ -40,7 +40,9 @@ int main(int argc , char *argv[])
         new_sock = malloc(1);
         *new_sock = client_sock;
         queue *nQueue = newQueue();
-        if( pthread_create( &sniffer_thread , NULL ,  connection_handler , (void*) new_sock, nQueue) < 0)
+        handlerArgs *nArgs = newArgs(new_sock,nQueue);
+        //if( pthread_create( &sniffer_thread , NULL ,  connection_handler , (void*) new_sock, nQueue) < 0)
+        if( pthread_create( &sniffer_thread , NULL ,  connection_handler , nArgs) < 0)
         {
             perror("could not create thread");
             return 1;

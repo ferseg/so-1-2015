@@ -1,6 +1,13 @@
 #include "../Headers/socket.h"
 #include "../Headers/process.h"
 
+handlerArgs* newArgs(void *newSocket,queue *nQueue){
+    handlerArgs *nArgs = malloc(sizeof(handlerArgs));
+    nArgs->pQueue = nQueue;
+    nArgs->socket_desc = newSocket;
+    return nArgs;
+}
+
 int testConnection(){
     int sock;
     struct sockaddr_in server;
@@ -51,10 +58,12 @@ void sendDataToServer(char *message){
 /*
  * This will handle connection for each client
  * */
-void *connection_handler(void *socket_desc,queue *pQueue)
+//void *connection_handler(void *socket_desc,queue *pQueue)
+void *connection_handler(handlerArgs *nArgs)
 {
     //Get the socket descriptor
-    int sock = *(int*)socket_desc;
+    int sock = *(int*)(nArgs->socket_desc);
+    //int sock = *(int*)socket_desc;
     int read_size;
     char client_message[2000];
      
@@ -63,12 +72,12 @@ void *connection_handler(void *socket_desc,queue *pQueue)
         int id,burst,priority;
         getTokens(client_message,&id,&burst,&priority);
         printf("%d %d %d\n",id,burst,priority);
-        newProcess(id,burst,priority);
+        process *nProcess = newProcess(id,burst,priority);
         //aquí debería de insertar en la  cola
-        
+        enq(nArgs->pQueue,nProcess);
     }
     fflush(stdout);
-    free(socket_desc);
+    //free(socket_desc);
     return 0;
 }
 
