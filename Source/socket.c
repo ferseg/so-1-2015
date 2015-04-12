@@ -1,13 +1,6 @@
 #include "../Headers/socket.h"
 #include "../Headers/process.h"
 
-handlerArgs* newArgs(void *newSocket,queue *nQueue){
-    handlerArgs *nArgs = malloc(sizeof(handlerArgs));
-    nArgs->pQueue = nQueue;
-    nArgs->socket_desc = newSocket;
-    return nArgs;
-}
-
 int testConnection(){
     int sock;
     struct sockaddr_in server;
@@ -30,7 +23,7 @@ int testConnection(){
         perror("connect failed. Error");
         return 0;
     }
-    close(socket);
+    close(sock);
     return 1;
 }
 
@@ -46,39 +39,13 @@ void sendDataToServer(char *message){
  
     //Connect to remote server
     connect(sock , (struct sockaddr *)&server , sizeof(server));
-
     if( send(sock , message , strlen(message) , 0) < 0)
     {
         puts("Send failed");
         return 1;
     }
-    close(socket);
-}
 
-/*
- * This will handle connection for each client
- * */
-//void *connection_handler(void *socket_desc,queue *pQueue)
-void *connection_handler(handlerArgs *nArgs)
-{
-    //Get the socket descriptor
-    int sock = *(int*)(nArgs->socket_desc);
-    //int sock = *(int*)socket_desc;
-    int read_size;
-    char client_message[2000];
-     
-    //Receive a message from client
-    while( (read_size = recv(sock , client_message , 2000 , 0)) > 0 ){
-        int id,burst,priority;
-        getTokens(client_message,&id,&burst,&priority);
-        printf("%d %d %d\n",id,burst,priority);
-        process *nProcess = newProcess(id,burst,priority);
-        //aquí debería de insertar en la  cola
-        enq(nArgs->pQueue,nProcess);
-    }
-    fflush(stdout);
-    //free(socket_desc);
-    return 0;
+    close(sock);
 }
 
 void getTokens(char *str,int *id,int *burst, int *priority){

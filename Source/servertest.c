@@ -1,20 +1,12 @@
-/*
-    C socket server example, handles multiple clients using threads
-*/
-#include <stdio.h>
-#include <string.h>    //strlen
-#include <stdlib.h>    //strlen
-#include <sys/socket.h>
-#include <arpa/inet.h> //inet_addr
-#include <unistd.h>    //write
-#include <pthread.h> //for threading , link with lpthread
 #include "../Headers/socket.h"
 
 int main(int argc , char *argv[])
 {
-    int socket_desc , client_sock , c , *new_sock;
+
+    queue *nQueue = newQueue();
+    int socket_desc , client_sock , c , read_size;
     struct sockaddr_in server , client;
-     
+    
     //Create socket
     socket_desc = socket(AF_INET , SOCK_STREAM , 0);
     puts("Socket created");
@@ -34,22 +26,29 @@ int main(int argc , char *argv[])
     //Accept and incoming connection
     puts("Waiting for incoming connections...");
     c = sizeof(struct sockaddr_in);
-    
+     
+    //accept connection from an incoming client
+    client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
+    puts("Connection accepted");
+    //Receive a message from client
+    char client_message[2000];
     while( client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c) ){
-        pthread_t sniffer_thread;
-        new_sock = malloc(1);
-        *new_sock = client_sock;
-        queue *nQueue = newQueue();
-        handlerArgs *nArgs = newArgs(new_sock,nQueue);
-        //if( pthread_create( &sniffer_thread , NULL ,  connection_handler , (void*) new_sock, nQueue) < 0)
-        if( pthread_create( &sniffer_thread , NULL ,  connection_handler , nArgs) < 0)
-        {
-            perror("could not create thread");
-            return 1;
+        recv(client_sock , client_message , 2000 , 0);
+        if(strlen(client_message) == 1){
+            //////////////////////////////////////////////////////////
+            // algoritmo para ordenar
+            printf("El algoritmo para ordenar es: %s\n",client_message);
+            //////////////////////////////////////////////////////////
         }
-         
-        //Now join the thread , so that we dont terminate before the thread
-        //pthread_join( sniffer_thread , NULL);
+        else{
+            int id,burst,priority;
+            getTokens(client_message,&id,&burst,&priority);
+            //////////////////////////////////////////
+            //aquí debería de insertar en la  cola////
+            enq(nQueue,newProcess(id,burst,priority));
+            printQueue(nQueue);
+            //////////////////////////////////////////
+        }
     }
     return 0;
 }
