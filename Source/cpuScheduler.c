@@ -64,7 +64,6 @@ void* initCPU(void *scheduler) {
 				float wt = tat - actualBurst;
 				totalTAT += tat;
 				totalWT += wt;
-				printf("total wt: %.2f\n", totalWT);
 				totalProcess++;
 				sumBurst += actualBurst;
 				saveProcessEndingInfo(actual, timingFile, tat, wt);
