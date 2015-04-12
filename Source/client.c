@@ -87,7 +87,6 @@ int selectAlgorithm(){
 		            printf("Opción desconocida.\n\n");
 		            break;
 	    	}
-
 	} while(selectedOption < 5);
 }
 
@@ -136,7 +135,9 @@ void startAutomaticClient(client *pClient){
 			if(pClient->status){
 				message = malloc(sizeof(char)*500);
 				asprintf(&message,"%d %d %d ",id,burst,priority);
-				sendDataToServer(message);
+				pthread_t serverSenderThread;
+			    pthread_create(&serverSenderThread, NULL, sendDataToServer, message);
+				//sendDataToServer(message);
 			}
 			sleep(waiting);
 			id++;
@@ -146,11 +147,25 @@ void startAutomaticClient(client *pClient){
 }
 
 void startManualClient(client *pClient){
+	char *message;
 	pClient->status = 1;
 	pthread_t stopClientThread;
 	int burst,priority,waiting = 0;
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
-	/* to-do */
-	FILE *file = openFile("input.txt", 'r');
-	closeFile(file);
+	if(testConnection()){
+		asprintf(&message,"%d",pClient->sortingMethod);
+		sendDataToServer(message);
+		FILE *file = openFile("input.txt", "r");
+		while(pClient->status && !feof(file)){
+			waiting = getRandomNumber(1,MAX_WAIT);
+			getNextLine(file,message);
+			//printf(message);
+			pthread_t serverSenderThread;
+			pthread_create(&serverSenderThread, NULL, sendDataToServer, message);
+			sleep(waiting);
+		}
+		closeFile(file);
+		pClient->status = 0;
+		pthread_join(stopClientThread, NULL);
+	}
 }
