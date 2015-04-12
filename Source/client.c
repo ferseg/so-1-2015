@@ -63,6 +63,7 @@ void startClient(){
 
 int selectAlgorithm(){
 	int selectedOption;
+	int quantum;
 	do {
 	    printf("MAIN MENU\n");
 	    printf("[1] FIFO\n");
@@ -80,7 +81,9 @@ int selectAlgorithm(){
 		        case 3:
 			        return 2;
 		        case 4:
-		        	return 3;
+		        	printf("Ingrese un quantum: ");
+	    			scanf("%d", &quantum);
+		        	return 3+quantum;
 		        case 5:
 		        	printf("Detenido por el usuario\n\n");
 		        	return -1;
