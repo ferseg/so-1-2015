@@ -7,6 +7,12 @@
 
 int main() {
 	// TODO: Change by enq with process of the client side
+	// 
+	//if (pthread_mutex_init(&lock, NULL) != 0)
+    //{
+    //    printf("\n mutex init failed\n");
+    //    return 1;
+    //}
 	queue *q = newQueue();
 	int i;
 	int j = 6;

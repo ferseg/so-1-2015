@@ -8,7 +8,6 @@
 #ifndef JOB_SCHEDULER_H_
 #define JOB_SCHEDULER_H_
 
-void listen(char *info);
 void insertProcess(queue *ready, process *proc, int algorithm);
 int isLower(int actual, int last);
 

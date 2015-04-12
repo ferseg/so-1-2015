@@ -1,8 +1,5 @@
 #include "../Headers/jobScheduler.h"
 
-void listen(char *info) {
-	// TODO: read the info from the socket
-}
 
 void insertProcess(queue *ready, process *proc, int algorithm) {
 	node *actual = ready->front;	
