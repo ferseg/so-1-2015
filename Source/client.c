@@ -60,8 +60,8 @@ void startAutomaticClient(client *pClient){
 	int burst,priority,waiting = 0;
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
 	if(testConnection()){
-		pthread_t sendDataThread;
-		pthread_create(&sendDataThread, NULL, sendDataToServer, "0");
+		//pthread_t sendDataThread;
+		//pthread_create(&sendDataThread, NULL, sendDataToServer, "0");
 		while(pClient->status){
 			burst = getRandomNumber(1,MAX_BURST);
 			priority = getRandomNumber(1,MAX_PRIORITY);
