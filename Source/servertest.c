@@ -39,8 +39,8 @@ int main(int argc , char *argv[])
         pthread_t sniffer_thread;
         new_sock = malloc(1);
         *new_sock = client_sock;
-        queue *newQueue = newQueue();
-        if( pthread_create( &sniffer_thread , NULL ,  connection_handler , (void*) new_sock, newQueue) < 0)
+        queue *nQueue = newQueue();
+        if( pthread_create( &sniffer_thread , NULL ,  connection_handler , (void*) new_sock, nQueue) < 0)
         {
             perror("could not create thread");
             return 1;
