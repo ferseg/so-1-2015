@@ -12,6 +12,8 @@
 #define MAX_WAIT 5
 #define MAX_BURST 20
 #define MAX_PRIORITY 5
+//#define CLIENT_MENU "Seleccione un tipo de cliente\n1-Manual\n2-Automático\n3-Salir\n"
+
 
 typedef struct client
 {
@@ -22,6 +24,8 @@ typedef struct client
 
 /* Create a client */
 client* newClient(int pType, int pAlgorithm);
+
+void startClient();
 
 void startAutomaticClient(client *pClient);
 

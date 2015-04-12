@@ -23,6 +23,10 @@ void stopClient(client *pClient){
 	return NULL;
 }
 
+void startClient(){
+	//printf("%s",CLIENT_MENU);
+}
+
 void startAutomaticClient(client *pClient){
 	int id = 1;
 	pClient->status = 1;
@@ -52,3 +56,4 @@ void startManualClient(client *pClient){
 	pClient->status = 1;
 	/* to-do */
 }
+

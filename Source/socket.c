@@ -28,8 +28,8 @@ int testConnection(){
 }
 
 void sendDataToServer(char *message){
-    int *sock;
-    struct sockaddr_in *server = getServer(sock);
+    int sock;
+    struct sockaddr_in server;
     
     //Create socket
     sock = socket(AF_INET , SOCK_STREAM , 0);
