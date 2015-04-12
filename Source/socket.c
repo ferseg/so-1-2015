@@ -51,7 +51,7 @@ void sendDataToServer(char *message){
 /*
  * This will handle connection for each client
  * */
-void *connection_handler(void *socket_desc)
+void *connection_handler(void *socket_desc,queue *pQueue)
 {
     //Get the socket descriptor
     int sock = *(int*)socket_desc;

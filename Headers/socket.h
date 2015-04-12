@@ -5,6 +5,7 @@
 #include <arpa/inet.h> //inet_addr
 #include <unistd.h>    //write
 #include <pthread.h> //for threading , link with lpthread
+#include "../Headers/queue.h"
 
 #ifndef SOCKET_H_   /* Include guard */
 #define SOCKET_H_
@@ -16,6 +17,6 @@ void sendDataToServer(char *message);
 
 void getTokens(char *str,int *id,int *burst, int *priority);
 
-void *connection_handler(void *socket_desc);
+void *connection_handler(void *socket_desc,queue *pQueue);
 
 #endif // SOCKET_H_

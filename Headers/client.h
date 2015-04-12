@@ -12,8 +12,6 @@
 #define MAX_WAIT 5
 #define MAX_BURST 20
 #define MAX_PRIORITY 5
-//#define CLIENT_MENU "Seleccione un tipo de cliente\n1-Manual\n2-Automático\n3-Salir\n"
-
 
 typedef struct client
 {
