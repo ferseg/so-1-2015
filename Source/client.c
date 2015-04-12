@@ -1,4 +1,5 @@
 #include "../Headers/client.h"
+#include "../Headers/socket.h"
 
 client* newClient(int pType, int pSortingMethod){
 	client *nc = malloc(sizeof(client));
@@ -22,27 +23,65 @@ void stopClient(client *pClient){
 	return NULL;
 }
 
+void startClient(){
+	char menu;
+	// do {
+	//     printf("MAIN MENU\n");
+	//     printf("[1] Cliente manual\n");
+	//     printf("[2] Cliente Automático\n");
+	//     printf("[3] Salir\n");
+	//     printf("Seleccione una opción [1, 2, 3]: ");
+	//     scanf("%c", &menu);
+	//     if(menu != "3"){
+	// 	    switch(menu){
+	// 	        case '1':
+			        
+	// 		        break;
+	// 	        case '2':
+		            
+	// 	            break;
+	// 	        default:
+	// 	            printf("Opción desconocida.\n\n");
+	// 	            break;
+	//     	}
+	//     } // switch
+	// } while(menu != '3');
+	client *c1 = newClient(1,0);
+	startAutomaticClient(c1);
+
+
+
+}
+
 void startAutomaticClient(client *pClient){
 	int id = 1;
 	pClient->status = 1;
 	pthread_t stopClientThread;
 	int burst,priority,waiting = 0;
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
-	printf("|%10s|%10s|%10s|%10s|\n","ID","Burst","Priority","Waiting");
-	while(pClient->status){
-		burst = getRandomNumber(1,MAX_BURST);
-		priority = getRandomNumber(1,MAX_PRIORITY);
-		waiting = getRandomNumber(1,MAX_WAIT);
-		if(pClient->status){
-			printf("|%10d|%10d|%10d|%10d|\n",id,burst,priority,waiting);
+	if(testConnection()){
+		//pthread_t sendDataThread;
+		//pthread_create(&sendDataThread, NULL, sendDataToServer, "0");
+		while(pClient->status){
+			burst = getRandomNumber(1,MAX_BURST);
+			priority = getRandomNumber(1,MAX_PRIORITY);
+			waiting = getRandomNumber(1,MAX_WAIT);
+			if(pClient->status){
+				char *message;
+				pthread_t sendDataThread;
+				asprintf(&message,"%d %d %d",id,burst,priority);
+				pthread_create(&sendDataThread, NULL, sendDataToServer, message);
+				pthread_join(sendDataThread, NULL);
+			}
+			sleep(waiting);
+			id++;
 		}
-		sleep(waiting);
-		id++;
+		pthread_join(stopClientThread, NULL);
 	}
-	pthread_join(stopClientThread, NULL);
 }
 
 void startManualClient(client *pClient){
 	pClient->status = 1;
 	/* to-do */
 }
+
