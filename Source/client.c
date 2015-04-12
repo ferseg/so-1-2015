@@ -26,7 +26,6 @@ void stopClient(client *pClient){
 			}
 		}while (input != 's');
 	}
-	return NULL;
 }
 
 void startClient(){
@@ -124,6 +123,6 @@ void startManualClient(client *pClient){
 	int burst,priority,waiting = 0;
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
 	/* to-do */
-	//FILE *file = openFile("/home/ken/Desktop/input.txt", 'r');
-	//closeFile(file);
+	FILE *file = openFile("input.txt", 'r');
+	closeFile(file);
 }
