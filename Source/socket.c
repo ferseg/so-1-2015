@@ -47,7 +47,8 @@ void sendDataToServer(char *message){
 
 
 /* Thread for filling the queue */
-void sendDataToQueue(queue *nQueue){
+void *sendDataToQueue(void *cpuSch){
+    cpuScheduler_t *cpu = (cpuScheduler_t *) cpuSch; 
     int socket_desc , client_sock , c , read_size;
     struct sockaddr_in server , client;
     
@@ -75,13 +76,19 @@ void sendDataToQueue(queue *nQueue){
     client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
     puts("Connection accepted");
     //Receive a message from client
-    char client_message[2000];
-    while( client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c) ){
-        recv(client_sock , client_message , 2000 , 0);
+    char client_message[MESSAGE_LEN]; //= malloc(sizeof(char)*MESSAGE_LEN);
+    while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) && cpu->running){
+        //puts("Connection accepted");
+        recv(client_sock , client_message , MESSAGE_LEN, 0);
         if(strlen(client_message) == 1){
             //////////////////////////////////////////////////////////
             // algoritmo para ordenar
             printf("El algoritmo para ordenar es: %s\n",client_message);
+            int algorithm = atoi(client_message);
+            cpu->algorithm = algorithm > ROUND_ROBIN ? ROUND_ROBIN : algorithm;
+            cpu->quantum = algorithm - ROUND_ROBIN;
+            pthread_t *thread = malloc(sizeof(pthread_t));
+            pthread_create(&thread, NULL, initCPU, (void *) cpu);
             //////////////////////////////////////////////////////////
         }
         else{
@@ -89,8 +96,10 @@ void sendDataToQueue(queue *nQueue){
             getTokens(client_message,&id,&burst,&priority);
             //////////////////////////////////////////
             //aquí debería de insertar en la  cola////
-            enq(nQueue,newProcess(id,burst,priority));
-            printQueue(nQueue);
+            //enq(nQueue,newProcess(id,burst,priority));
+            //printQueue(nQueue);
+            process *np = newProcess(id, burst, priority);
+            insertProcess(cpu->ready, np, cpu->algorithm);
             //////////////////////////////////////////
         }
     }

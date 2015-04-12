@@ -9,6 +9,7 @@ client* newClient(int pType, int pSortingMethod){
 }
 
 int getRandomNumber(int pMinNum, int pMaxNum){
+	srand ( time(NULL) );
     return (rand() % (pMaxNum - pMinNum + 1)) + pMinNum;
 }
 
@@ -18,13 +19,13 @@ void stopClient(client *pClient){
 		char input;
   	    printf("\nIngrese la letra s para detener el cliente.\n");
 		do{
-			scanf("%c", & input);
+			scanf("%c", &input);
 		    if (input == 's') {
 		    	pClient->status = 0;
 				printf("\nCliente detenido por el usuario.\n");
 		    	break;
 			}
-		}while (input != 's');
+		} while (input != 's');
 	}
 }
 
@@ -38,17 +39,14 @@ void startClient(){
 	    printf("[3] Salir\n");
 	    printf("Seleccione una opción [1, 2, 3]: ");
 	    scanf("%d", &selectedOption);
+	    clientType = selectedOption;
+		algorithm = selectAlgorithm();
+	    c1 = newClient(clientType,algorithm);
 		switch(selectedOption){
 	        case 1:
-		        clientType = selectedOption;
-				algorithm = selectAlgorithm();
-			    c1 = newClient(clientType,algorithm);
   			    startManualClient(c1);
 			    return;
 		    case 2:
-		        clientType = selectedOption;
-				algorithm = selectAlgorithm();
-			    c1 = newClient(clientType,algorithm);
 				startAutomaticClient(c1);
 		        return;
 	        case 3:
@@ -58,11 +56,12 @@ void startClient(){
 	            printf("Opción desconocida.\n\n");
 	            break;
 	    	}
-	} while(selectedOption != '3');
+	} while(selectedOption < 3);
 }
 
 int selectAlgorithm(){
 	int selectedOption;
+	int quantum;
 	do {
 	    printf("MAIN MENU\n");
 	    printf("[1] FIFO\n");
@@ -74,13 +73,13 @@ int selectAlgorithm(){
 	    scanf("%d", &selectedOption);
 		    switch(selectedOption){
 		        case 1:
-			        return 0;
 		        case 2:
-		        	return 1;
 		        case 3:
-			        return 2;
+		        	return selectedOption - 1;
 		        case 4:
-		        	return 3;
+		        	printf("Ingrese un quantum: ");
+	    			scanf("%d", &quantum);
+		        	return 3+quantum;
 		        case 5:
 		        	printf("Detenido por el usuario\n\n");
 		        	return -1;
@@ -89,12 +88,40 @@ int selectAlgorithm(){
 		            break;
 	    	}
 
-	} while(selectedOption != '5');
+	} while(selectedOption < 5);
 }
+
+/*void startAutomaticClient(client *pClient){
+	int id = 1;
+	char *message = malloc(sizeof(char)*500);
+	pClient->status = 1;
+	pthread_t stopClientThread;
+	int burst,priority,waiting = 0;
+	pthread_create(&stopClientThread, NULL, stopClient, pClient);
+	if(testConnection()){
+		sprintf(message,"%d",pClient->sortingMethod);
+		printf("Hey: %s\n", message);
+		sendDataToServer(message);
+		puts("Data sent");
+		/*while(pClient->status){
+			burst = getRandomNumber(1,MAX_BURST);
+			priority = getRandomNumber(1,MAX_PRIORITY);
+			waiting = getRandomNumber(1,MAX_WAIT);
+			message = malloc(sizeof(char)*500);
+			if(pClient->status){
+				sprintf(message,"%d %d %d ",id,burst,priority);
+				sendDataToServer(message);
+			}
+			sleep(waiting);
+			id++;
+		}
+		pthread_join(stopClientThread, NULL);
+	}
+}*/
 
 void startAutomaticClient(client *pClient){
 	int id = 1;
-	char *message;
+	char *message = malloc(sizeof(char)*500);
 	pClient->status = 1;
 	pthread_t stopClientThread;
 	int burst,priority,waiting = 0;
@@ -107,6 +134,7 @@ void startAutomaticClient(client *pClient){
 			priority = getRandomNumber(1,MAX_PRIORITY);
 			waiting = getRandomNumber(1,MAX_WAIT);
 			if(pClient->status){
+				message = malloc(sizeof(char)*500);
 				asprintf(&message,"%d %d %d ",id,burst,priority);
 				sendDataToServer(message);
 			}

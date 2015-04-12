@@ -16,6 +16,7 @@ cpuScheduler_t* createCPU(queue *ready, int algorithm) {
 	cpuScheduler_t *scheduler = malloc(sizeof(cpuScheduler_t));
 	scheduler->ready = ready;
 	scheduler->algorithm = algorithm;
+	scheduler->running = RUNNING;
 	return scheduler;
 }
 
@@ -25,7 +26,6 @@ cpuScheduler_t* createCPU(queue *ready, int algorithm) {
  */
 void* initCPU(void *scheduler) {
 	cpuScheduler_t *cpuSch = (cpuScheduler_t *) scheduler;
-	cpuSch->running = RUNNING;
 	int quantum = cpuSch->quantum;
 	int sumBurst = EMPTY;
 	int totalProcess = EMPTY;

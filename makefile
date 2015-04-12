@@ -1,17 +1,17 @@
 # Copyrigth © 2015, All rights reserved.
 # makefile
 # Author: Fernando Segovia Salgado
-FILES = Source/main_server.c Source/fileManager.c Source/cpuScheduler.c Source/queue.c Source/process.c Source/node.c Source/timer.c Source/jobScheduler.c
-CLIENT_FILES = Source/main.c Source/socket.c Source/client.c Source/fileManager.c Source/queue.c Source/process.c Source/node.c Source/timer.c
+FILES = Source/main_server.c Source/fileManager.c Source/cpuScheduler.c Source/queue.c Source/process.c Source/node.c Source/timer.c Source/jobScheduler.c Source/socket.c
+CLIENT_FILES = Source/main.c Source/socket.c Source/client.c Source/fileManager.c Source/queue.c Source/process.c Source/node.c Source/timer.c Source/jobScheduler.c Source/cpuScheduler.c
 SERVER_FILES = Source/servertest.c Source/socket.c Source/queue.c Source/process.c Source/node.c Source/timer.c
-CFLAGS = -I ../Hearders #-Wall
+CFLAGS = -w -I ../Hearders #-Wall
 CC = gcc
 PROG_NAME = bin/server
 CLIENT_NAME = bin/client
-SERVER_NAME =bin/server
+#SERVER_NAME = bin/server
 LIBS = -lpthread -lm
 
-clear_screen: program
+clear_screen: program start_client
 	clear
 
 program:
