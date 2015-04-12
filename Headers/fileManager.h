@@ -10,7 +10,7 @@
 #define FILE_WRITER_H_
 
 FILE* openFile(char *filename, char *options);
-/* TODO: read */
+void getNextLine(FILE *file,char *singleLine);
 void writeInFile(FILE *file, char *message);
 void closeFile(FILE *file);
 

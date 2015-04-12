@@ -40,15 +40,15 @@ void startClient(){
 	    scanf("%d", &selectedOption);
 		switch(selectedOption){
 	        case 1:
-		        clientType = selectedOption;
+	        	clientType = selectedOption;
 				algorithm = selectAlgorithm();
-			    c1 = newClient(clientType,algorithm);
+				c1 = newClient(clientType,algorithm);
   			    startManualClient(c1);
 			    return;
 		    case 2:
-		        clientType = selectedOption;
+		    	clientType = selectedOption;
 				algorithm = selectAlgorithm();
-			    c1 = newClient(clientType,algorithm);
+				c1 = newClient(clientType,algorithm);
 				startAutomaticClient(c1);
 		        return;
 	        case 3:
@@ -58,7 +58,7 @@ void startClient(){
 	            printf("Opción desconocida.\n\n");
 	            break;
 	    	}
-	} while(selectedOption != '3');
+	} while(selectedOption != 3);
 }
 
 int selectAlgorithm(){
@@ -75,11 +75,9 @@ int selectAlgorithm(){
 	    scanf("%d", &selectedOption);
 		    switch(selectedOption){
 		        case 1:
-			        return 0;
 		        case 2:
-		        	return 1;
 		        case 3:
-			        return 2;
+			        return selectedOption - 1;
 		        case 4:
 		        	printf("Ingrese un quantum: ");
 	    			scanf("%d", &quantum);
@@ -92,7 +90,7 @@ int selectAlgorithm(){
 		            break;
 	    	}
 
-	} while(selectedOption != '5');
+	} while(selectedOption != 5);
 }
 
 void startAutomaticClient(client *pClient){
@@ -111,7 +109,9 @@ void startAutomaticClient(client *pClient){
 			waiting = getRandomNumber(1,MAX_WAIT);
 			if(pClient->status){
 				asprintf(&message,"%d %d %d ",id,burst,priority);
-				sendDataToServer(message);
+				pthread_t serverSenderThread;
+			    pthread_create(&serverSenderThread, NULL, sendDataToServer, message);
+				//sendDataToServer(message);
 			}
 			sleep(waiting);
 			id++;
@@ -121,11 +121,25 @@ void startAutomaticClient(client *pClient){
 }
 
 void startManualClient(client *pClient){
+	char *message;
 	pClient->status = 1;
 	pthread_t stopClientThread;
 	int burst,priority,waiting = 0;
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
-	/* to-do */
-	FILE *file = openFile("input.txt", 'r');
-	closeFile(file);
+	if(testConnection()){
+		asprintf(&message,"%d",pClient->sortingMethod);
+		sendDataToServer(message);
+		FILE *file = openFile("input.txt", "r");
+		while(pClient->status && !feof(file)){
+			waiting = getRandomNumber(1,MAX_WAIT);
+			getNextLine(file,message);
+			//printf(message);
+			pthread_t serverSenderThread;
+			pthread_create(&serverSenderThread, NULL, sendDataToServer, message);
+			sleep(waiting);
+		}
+		closeFile(file);
+		pClient->status = 0;
+		pthread_join(stopClientThread, NULL);
+	}
 }
