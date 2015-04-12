@@ -1,5 +1,4 @@
 #include "../Headers/client.h"
-#include "../Headers/socket.h"
 
 client* newClient(int pType, int pSortingMethod){
 	client *nc = malloc(sizeof(client));
@@ -16,62 +15,100 @@ int getRandomNumber(int pMinNum, int pMaxNum){
 /* Thread that controls the status of the client */
 void stopClient(client *pClient){
 	if(pClient->status){
-		getchar();
-		printf("\nClient stopped by user.\n");
-		pClient->status = 0;
+		char input;
+  	    printf("\nIngrese la letra s para detener el cliente.\n");
+		do{
+			scanf("%c", & input);
+		    if (input == 's') {
+		    	pClient->status = 0;
+				printf("\nCliente detenido por el usuario.\n");
+		    	break;
+			}
+		}while (input != 's');
 	}
-	return NULL;
 }
 
 void startClient(){
-	char menu;
-	// do {
-	//     printf("MAIN MENU\n");
-	//     printf("[1] Cliente manual\n");
-	//     printf("[2] Cliente Automático\n");
-	//     printf("[3] Salir\n");
-	//     printf("Seleccione una opción [1, 2, 3]: ");
-	//     scanf("%c", &menu);
-	//     if(menu != "3"){
-	// 	    switch(menu){
-	// 	        case '1':
-			        
-	// 		        break;
-	// 	        case '2':
-		            
-	// 	            break;
-	// 	        default:
-	// 	            printf("Opción desconocida.\n\n");
-	// 	            break;
-	//     	}
-	//     } // switch
-	// } while(menu != '3');
-	client *c1 = newClient(1,0);
-	startAutomaticClient(c1);
+	int selectedOption,clientType,algorithm;
+	client *c1;
+	do {
+	    printf("MAIN MENU\n");
+	    printf("[1] Cliente manual\n");
+	    printf("[2] Cliente Automático\n");
+	    printf("[3] Salir\n");
+	    printf("Seleccione una opción [1, 2, 3]: ");
+	    scanf("%d", &selectedOption);
+		switch(selectedOption){
+	        case 1:
+		        clientType = selectedOption;
+				algorithm = selectAlgorithm();
+			    c1 = newClient(clientType,algorithm);
+  			    startManualClient(c1);
+			    return;
+		    case 2:
+		        clientType = selectedOption;
+				algorithm = selectAlgorithm();
+			    c1 = newClient(clientType,algorithm);
+				startAutomaticClient(c1);
+		        return;
+	        case 3:
+	        	printf("Detenido por el usuario\n\n");
+	        	return;
+	        default:
+	            printf("Opción desconocida.\n\n");
+	            break;
+	    	}
+	} while(selectedOption != '3');
+}
 
+int selectAlgorithm(){
+	int selectedOption;
+	do {
+	    printf("MAIN MENU\n");
+	    printf("[1] FIFO\n");
+	    printf("[2] SJF\n");
+	    printf("[3] SPF\n");
+	    printf("[4] Round Robin\n");
+	    printf("[5] Salir\n");
+	    printf("Seleccione una opción [1, 2, 3,4 ,5]: ");
+	    scanf("%d", &selectedOption);
+		    switch(selectedOption){
+		        case 1:
+			        return 0;
+		        case 2:
+		        	return 1;
+		        case 3:
+			        return 2;
+		        case 4:
+		        	return 3;
+		        case 5:
+		        	printf("Detenido por el usuario\n\n");
+		        	return -1;
+		        default:
+		            printf("Opción desconocida.\n\n");
+		            break;
+	    	}
 
-
+	} while(selectedOption != '5');
 }
 
 void startAutomaticClient(client *pClient){
 	int id = 1;
+	char *message;
 	pClient->status = 1;
 	pthread_t stopClientThread;
 	int burst,priority,waiting = 0;
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
 	if(testConnection()){
-		//pthread_t sendDataThread;
-		//pthread_create(&sendDataThread, NULL, sendDataToServer, "0");
+		asprintf(&message,"%d",pClient->sortingMethod);
+		sendDataToServer(message);
 		while(pClient->status){
 			burst = getRandomNumber(1,MAX_BURST);
 			priority = getRandomNumber(1,MAX_PRIORITY);
 			waiting = getRandomNumber(1,MAX_WAIT);
 			if(pClient->status){
-				char *message;
-				pthread_t sendDataThread;
-				asprintf(&message,"%d %d %d",id,burst,priority);
-				pthread_create(&sendDataThread, NULL, sendDataToServer, message);
-				pthread_join(sendDataThread, NULL);
+				asprintf(&message,"%d %d %d ",id,burst,priority);
+				sendDataToServer(message);
 			}
 			sleep(waiting);
 			id++;
@@ -82,6 +119,10 @@ void startAutomaticClient(client *pClient){
 
 void startManualClient(client *pClient){
 	pClient->status = 1;
+	pthread_t stopClientThread;
+	int burst,priority,waiting = 0;
+	pthread_create(&stopClientThread, NULL, stopClient, pClient);
 	/* to-do */
+	FILE *file = openFile("input.txt", 'r');
+	closeFile(file);
 }
-

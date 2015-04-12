@@ -74,6 +74,7 @@ void printQueue(queue *pQueue)
         printf("Queue is empty");
         return;
     }
+    printf("------------- Queue Data ---------------\n");
     while (currentNode != pQueue->rear)
     {
         printData(currentNode);
@@ -81,5 +82,5 @@ void printQueue(queue *pQueue)
     }
     if (currentNode == pQueue->rear)
         printData(currentNode);
-    printf("\n-------------Queue size : %d-------------\n", getQueueSize(pQueue));
+    printf("-------------Queue size : %d-------------\n\n", getQueueSize(pQueue));
 }
