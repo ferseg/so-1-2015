@@ -72,8 +72,13 @@ void* initCPU(void *scheduler) {
 		}
 		else if (cpuSch->algorithm == ROUND_ROBIN) {
 			cpuSch->ready = tmpReady;
-			cpuSch->ready->count = tmpReady->count;
+			tmpReady->front = NULL;
+			tmpReady->rear = NULL;
 			tmpReady = newQueue();
+		}
+		else if (cpuSch->running == STOP_WHEN_QUEUE_IS_EMPTY) {
+			puts("Entro empty");
+			cpuSch->running = STOPPED;
 		}
 	}
 	float avgTAT = totalTAT / totalProcess;

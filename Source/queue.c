@@ -38,33 +38,27 @@ void enq(queue *pQueue, process *pProcess)
 /* Dequeing the queue */
 process* deq(queue *pQueue)
 {
-	process *firstProcess;
-	node *newFront = pQueue->front;
-    if (newFront == NULL)
+	node *firstNode = pQueue->front;
+    if (firstNode == NULL)
     {
         pQueue->count = 0;
-        return firstProcess;
+        return NULL;
+    }
+    process *proc = firstNode->current;
+    if (firstNode->next != NULL)
+    {
+        pQueue->front = firstNode->next;
     }
     else
     {
-        if (newFront->next != NULL)
-        {
-            newFront = newFront->next;
-  			firstProcess = pQueue->front->current;
-            free(pQueue->front);
-            pQueue->front = newFront;
-            pQueue->front->before = NULL;
-        }
-        else
-        {
-    		firstProcess = pQueue->front->current;
-            free(pQueue->front);
-            pQueue->front = NULL;
-            pQueue->rear = NULL;
-        }
-        pQueue->count -= 1;
-        return firstProcess;
+        pQueue->front = NULL;
+        pQueue->rear = NULL;
+        free(pQueue->front);
     }
+    firstNode->next = NULL;
+    firstNode->before = NULL;
+    pQueue->count -= 1;
+    return proc;
 }
 
 /* Displaying the queue elements */
@@ -74,7 +68,7 @@ void printQueue(queue *pQueue)
  
     if ((currentNode == NULL) && (pQueue->rear == NULL))
     {
-        printf("\n[!] Queue is empty\n\n");
+        printf("\n[!] Queue is empty %d\n\n", pQueue->count);
         return;
     }
     printf("------------- Queue Data ---------------\n");

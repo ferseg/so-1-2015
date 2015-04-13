@@ -45,6 +45,11 @@ void sendDataToServer(char *message){
     close(sock);
 }
 
+void clearStrArr(char arr[], int len) {
+    while(--len > -1) {
+        arr[len] = 0;
+    }
+}
 
 /* Thread for filling the queue */
 void *sendDataToQueue(void *cpuSch){
@@ -76,27 +81,33 @@ void *sendDataToQueue(void *cpuSch){
     client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
     //puts("Connection accepted");
     //Receive a message from client
-    char client_message[MESSAGE_LEN]; //= malloc(sizeof(char)*MESSAGE_LEN);
+    char client_message[MESSAGE_LEN];
     pthread_t *thread = malloc(sizeof(pthread_t));
     while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) && cpu->running){
         ////puts("Connection accepted");
+        clearStrArr(client_message, MESSAGE_LEN);
         recv(client_sock , client_message , MESSAGE_LEN, 0);
-        if(strlen(client_message) == 1){
+        printf("Message: %s\n", client_message);
+        int strLen = strlen(client_message);
+        if(strLen == 1 || strLen == 4){
             //////////////////////////////////////////////////////////
             // algoritmo para ordenar
             int algorithm = atoi(client_message);
-            cpu->algorithm = algorithm > ROUND_ROBIN ? ROUND_ROBIN : algorithm;
-            cpu->quantum = algorithm - ROUND_ROBIN;
-            pthread_create(&thread, NULL, initCPU, (void *) cpu);
+            if (strLen == 4) {
+                cpu->running = STOP_WHEN_QUEUE_IS_EMPTY;
+                break;
+            }
+            else {
+                cpu->algorithm = algorithm > ROUND_ROBIN ? ROUND_ROBIN : algorithm;
+                cpu->quantum = algorithm - ROUND_ROBIN;
+                pthread_create(&thread, NULL, initCPU, (void *) cpu);
+            }
             //////////////////////////////////////////////////////////
         }
         else{
             int id,burst,priority;
             getTokens(client_message,&id,&burst,&priority);
             //////////////////////////////////////////
-            //aquí debería de insertar en la  cola////
-            //enq(nQueue,newProcess(id,burst,priority));
-            //printQueue(nQueue);
             process *np = newProcess(id, burst, priority);
             insertProcess(cpu->ready, np, cpu->algorithm);
             //////////////////////////////////////////

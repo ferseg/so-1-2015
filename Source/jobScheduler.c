@@ -28,7 +28,7 @@ void insertProcess(queue *ready, process *proc, int algorithm) {
 			toInsert->next = actual;
 			toInsert->before = actual->before;
 			actual->before = toInsert;
-			if(actual == ready->front) {
+			if(toInsert->before == NULL) {
 				ready->front = toInsert;
 			}
 			ready->count++;

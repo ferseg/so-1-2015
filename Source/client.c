@@ -66,7 +66,7 @@ int selectAlgorithm(){
 	    printf("MAIN MENU\n");
 	    printf("[1] FIFO\n");
 	    printf("[2] SJF\n");
-	    printf("[3] SPF\n");
+	    printf("[3] HPF\n");
 	    printf("[4] Round Robin\n");
 	    printf("[5] Salir\n");
 	    printf("Seleccione una opción [1, 2, 3,4 ,5]: ");
@@ -90,34 +90,6 @@ int selectAlgorithm(){
 	} while(selectedOption < 5);
 }
 
-/*void startAutomaticClient(client *pClient){
-	int id = 1;
-	char *message = malloc(sizeof(char)*500);
-	pClient->status = 1;
-	pthread_t stopClientThread;
-	int burst,priority,waiting = 0;
-	pthread_create(&stopClientThread, NULL, stopClient, pClient);
-	if(testConnection()){
-		sprintf(message,"%d",pClient->sortingMethod);
-		printf("Hey: %s\n", message);
-		sendDataToServer(message);
-		puts("Data sent");
-		/*while(pClient->status){
-			burst = getRandomNumber(1,MAX_BURST);
-			priority = getRandomNumber(1,MAX_PRIORITY);
-			waiting = getRandomNumber(1,MAX_WAIT);
-			message = malloc(sizeof(char)*500);
-			if(pClient->status){
-				sprintf(message,"%d %d %d ",id,burst,priority);
-				sendDataToServer(message);
-			}
-			sleep(waiting);
-			id++;
-		}
-		pthread_join(stopClientThread, NULL);
-	}
-}*/
-
 void startAutomaticClient(client *pClient){
 	int id = 1;
 	char *message = malloc(sizeof(char)*500);
@@ -137,35 +109,51 @@ void startAutomaticClient(client *pClient){
 				asprintf(&message,"%d %d %d ",id,burst,priority);
 				pthread_t serverSenderThread;
 			    pthread_create(&serverSenderThread, NULL, sendDataToServer, message);
-				//sendDataToServer(message);
 			}
 			sleep(waiting);
 			id++;
 		}
+		sendDataToServer("1000");
 		pthread_join(stopClientThread, NULL);
 	}
 }
 
-void startManualClient(client *pClient){
+void startManualClient(client *pClient) {
 	char *message;
 	pClient->status = 1;
 	pthread_t stopClientThread;
 	int burst,priority,waiting = 0;
 	pthread_create(&stopClientThread, NULL, stopClient, pClient);
 	if(testConnection()){
+		clearString(&message, 500);
 		asprintf(&message,"%d",pClient->sortingMethod);
 		sendDataToServer(message);
+		
 		FILE *file = openFile("input.txt", "r");
+		if (!file) {
+			puts("El archivo no existe");
+			return;
+		}
 		while(pClient->status && !feof(file)){
 			waiting = getRandomNumber(1,MAX_WAIT);
-			getNextLine(file,message);
-			//printf(message);
+			clearString(&message, 500);
+			getNextLine(file, message);
 			pthread_t serverSenderThread;
 			pthread_create(&serverSenderThread, NULL, sendDataToServer, message);
 			sleep(waiting);
 		}
+		clearString(&message, 500);
+		asprintf(&message,"%d",1000);
+		sendDataToServer(message);
 		closeFile(file);
 		pClient->status = 0;
 		pthread_join(stopClientThread, NULL);
+	}
+}
+
+void clearString(char *str, int len) {
+	str = malloc(sizeof(char)*len);
+	while(--len > -1) {
+		str[len] = 0;
 	}
 }

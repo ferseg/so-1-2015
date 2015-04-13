@@ -30,4 +30,6 @@ void startAutomaticClient(client *pClient);
 
 void startManualClient(client *pClient);
 
+void clearString(char *str, int len);
+
 #endif // CLIENT_H_

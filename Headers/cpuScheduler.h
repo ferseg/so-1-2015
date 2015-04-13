@@ -12,6 +12,7 @@
 
 #define RUNNING 1
 #define STOPPED 0
+#define STOP_WHEN_QUEUE_IS_EMPTY 2
 // The sleep for the mini burst
 #define MINI_BURST_SLEEP 1
 #define EXIT_WO_ERROR 0
