@@ -31,6 +31,7 @@ void enq(queue *pQueue, process *pProcess)
 		node *nNode = newNode(pProcess);
         setNext(pQueue->rear, nNode);
         pQueue->rear = nNode;
+        nNode->next = NULL;
     }
     pQueue->count++;
 }
@@ -38,30 +39,27 @@ void enq(queue *pQueue, process *pProcess)
 /* Dequeing the queue */
 process* deq(queue *pQueue)
 {
-	process *firstProcess;
-	node *newFront = pQueue->front;
-    if (newFront == NULL)
+	node *firstNode = pQueue->front;
+    if (firstNode == NULL)
     {
-        return firstProcess;
+        pQueue->count = 0;
+        return NULL;
+    }
+    process *proc = firstNode->current;
+    if (firstNode->next != NULL)
+    {
+        pQueue->front = firstNode->next;
     }
     else
-        if (newFront->next != NULL)
-        {
-            newFront = newFront->next;
-  			firstProcess = pQueue->front->current;
-            free(pQueue->front);
-            pQueue->front = newFront;
-            pQueue->front->before = NULL;
-        }
-        else
-        {
-    		firstProcess = pQueue->front->current;
-            free(pQueue->front);
-            pQueue->front = NULL;
-            pQueue->rear = NULL;
-        }
-        pQueue->count--;
-        return firstProcess;
+    {
+        pQueue->front = NULL;
+        pQueue->rear = NULL;
+        free(pQueue->front);
+    }
+    firstNode->next = NULL;
+    firstNode->before = NULL;
+    pQueue->count -= 1;
+    return proc;
 }
 
 /* Displaying the queue elements */
@@ -71,16 +69,16 @@ void printQueue(queue *pQueue)
  
     if ((currentNode == NULL) && (pQueue->rear == NULL))
     {
-        printf("Queue is empty");
+        printf("\n[!] Queue is empty %d\n\n", pQueue->count);
         return;
     }
     printf("------------- Queue Data ---------------\n");
-    while (currentNode != pQueue->rear)
+    while (currentNode != NULL)
     {
         printData(currentNode);
         currentNode = currentNode->next;
     }
-    if (currentNode == pQueue->rear)
-        printData(currentNode);
-    printf("-------------Queue size : %d-------------\n\n", getQueueSize(pQueue));
+    /*if (currentNode == pQueue->rear)
+        printData(currentNode);*/
+    printf("------------- END OF DATA Size: %d-------------\n\n", pQueue->count);
 }

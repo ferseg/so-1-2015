@@ -1,8 +1,8 @@
-#include "../Headers/client.h"
 #include "../Headers/queue.h"
-
+ 
 int main()
 {
+
 	startClient();
 	
 

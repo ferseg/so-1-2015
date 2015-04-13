@@ -25,7 +25,7 @@ void writeInFile(FILE *file, char *message) {
 	fprintf(file, "%s\n", message);
 }
 
-void getNextLine(FILE *file,char *singleLine){
+void getNextLine(FILE *file, char *singleLine){
 	fgets(singleLine,150,file);
 }
 
