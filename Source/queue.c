@@ -31,8 +31,9 @@ void enq(queue *pQueue, process *pProcess)
 		node *nNode = newNode(pProcess);
         setNext(pQueue->rear, nNode);
         pQueue->rear = nNode;
+        nNode->next = NULL;
     }
-    pQueue->count += 1;
+    pQueue->count++;
 }
 
 /* Dequeing the queue */
@@ -72,12 +73,12 @@ void printQueue(queue *pQueue)
         return;
     }
     printf("------------- Queue Data ---------------\n");
-    while (currentNode)
+    while (currentNode != NULL)
     {
         printData(currentNode);
         currentNode = currentNode->next;
     }
     /*if (currentNode == pQueue->rear)
         printData(currentNode);*/
-    printf("------------- END OF DATA -------------\n\n");
+    printf("------------- END OF DATA Size: %d-------------\n\n", pQueue->count);
 }

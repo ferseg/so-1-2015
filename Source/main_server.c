@@ -11,7 +11,7 @@ int main() {
 
 	queue *nQueue = newQueue();
 	cpuScheduler_t *cpu = createCPU(nQueue, FIFO);
-	//initCPU(cpu);
+	//pthread_mutex_init(&lock, NULL);
     pthread_t queueManagerThread;
     pthread_create(&queueManagerThread, NULL, sendDataToQueue, (void*)cpu);
     //sleep(20);
@@ -38,6 +38,7 @@ int main() {
 	} while(cpu->running);
 
     pthread_join(queueManagerThread, NULL);
+    //pthread_mutex_destroy(&lock);
 
 	/*queue *q = newQueue();
 	int i;

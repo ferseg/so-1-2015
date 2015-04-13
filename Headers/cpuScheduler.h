@@ -23,6 +23,8 @@
 #define APPEND_OPTION "a"
 #define TIMING_FILE "timing.txt"
 
+pthread_mutex_t lock;
+
 typedef struct {
 	unsigned short int algorithm;
 	unsigned short int running;
@@ -48,7 +50,7 @@ void executeProcess(process* proc);
 
 process* searchForProcess(cpuScheduler_t *scheduler);
 
-/*process* getLower(cpuScheduler_t*);*/
+process* getLowerP(cpuScheduler_t*);
 
 void saveProcessEndingInfo(process* proc, FILE *file, float tat, float wt);\
 

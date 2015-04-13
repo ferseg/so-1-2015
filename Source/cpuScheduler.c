@@ -31,17 +31,18 @@ void* initCPU(void *scheduler) {
 	int totalProcess = EMPTY;
 	float totalTAT;
 	float totalWT;
-	// Creates a temp ready (for RR) "queue.h"
-	queue *tmpReady = newQueue();
 	// Creates a timer to control idle CPU "timer.h"
 	timer *idle = newTimer();
 	// Opens a file "fileManager.h"
 	FILE *timingFile = openFile(TIMING_FILE, WRITE_OPTION);
 	writeInFile(timingFile, "Proceso \t|\tTAT \t|\tWT");
 	while(cpuSch->running) {
-		if(cpuSch->ready->count) {
-			process *actual = deq(cpuSch->ready);
-			printf("\nProceso: %d con burst: %d y prioridad: %d entra en ejecucion\n", 
+		if(cpuSch->ready->count && (cpuSch->ready->front != NULL)) {
+			//pthread_mutex_lock(&lock);
+			process *actual = deq(cpuSch->ready);//searchForProcess(cpuSch);
+			//deq(cpuSch->ready);
+			//pthread_mutex_unlock(&lock);
+			printf("\nProceso: %d con burst: %d y prioridad: %d entra en ejecucion.", 
 						actual->id, actual->burst, actual->priority);
 
 			puts("\n[->] Seleccione una opción [1, 2]: ");
@@ -67,17 +68,12 @@ void* initCPU(void *scheduler) {
 				saveProcessEndingInfo(actual, timingFile, tat, wt);
 			}
 			else if(cpuSch->algorithm == ROUND_ROBIN) {
-				enq(tmpReady, actual);
+				//pthread_mutex_lock(&lock);
+				enq(cpuSch->ready, actual);
+				//pthread_mutex_unlock(&lock);
 			}
 		}
-		else if (cpuSch->algorithm == ROUND_ROBIN) {
-			cpuSch->ready = tmpReady;
-			tmpReady->front = NULL;
-			tmpReady->rear = NULL;
-			tmpReady = newQueue();
-		}
 		else if (cpuSch->running == STOP_WHEN_QUEUE_IS_EMPTY) {
-			puts("Entro empty");
 			cpuSch->running = STOPPED;
 		}
 	}
@@ -94,11 +90,12 @@ void* initCPU(void *scheduler) {
 	// Closes the file "fileManager.h"
 	closeFile(timingFile);
 	// Sends a signal to tell that the thread has finished
+	puts("Finalizó");
 	pthread_exit(EXIT_WO_ERROR);
 }
 
 /**
- * Saves the information of a process when it ends its execution
+ * Saves the information of a process when it ends its executions
  * @param proc The process that will be saved
  * @param file The file in which the information will be saved
  * @param tat  Turn Around Time
@@ -141,24 +138,25 @@ int selectQuantum(process *actual, int quantum) {
 		// proccess to be executed.
 		case SJF:
 		case HPF:
-			best = getLower(scheduler);
+			best = getLowerP(scheduler);
 			break;
 	}
 	return best;
-}
+}*/
 
 /**
  * Gets the process with the lower measure depending on the algorithm
  * @param  scheduler The scheduler that has the ready on it
  * @return           The lowest process depending on the algorithm
  */
-/*process* getLower(cpuScheduler_t *scheduler) {
+/*process* getLowerP(cpuScheduler_t *scheduler) {
+	puts("LoweP");
 	queue *ready = scheduler->ready;
 	// The best is the first node initially
 	node *best = ready->front;
-	node *actual = best->next;
+	node *actual = best;
 	int algorithm = scheduler->algorithm;
-	int i = 1;
+	int i = 0;
 	while(i++ < ready->count) {
 		if(actual != NULL) {
 			int actualValue;
@@ -177,22 +175,33 @@ int selectQuantum(process *actual, int quantum) {
 					break;
 			}
 			// Changes if its 
-			if(isLower(actualValue, lastValue)) {
+			if(actualValue < lastValue) {
 				best = actual;
 			}
 		}
 		else {
+			puts("Selected");
 			// Remove the node from the queue
-			best->before->next = best->next;
-			best->next->before = best->before;
+			if(best->before != NULL) {
+				best->before->next = best->next;
+			}
+			if(best->next != NULL) {
+				best->next->before = best->before;
+			}
 			best->next, best->before = NULL;
+			ready->count--;
 			return best->current;
 		}
 		actual = actual->next;
 	}
 	// Remove the node from the queue
-	best->before->next = best->next;
-	best->next->before = best->before;
+	if(best->before != NULL) {
+		best->before->next = best->next;
+	}
+	if(best->next != NULL) {
+		best->next->before = best->before;
+	}
+	ready->count--;
 	best->next, best->before = NULL;
 	return best->current;
 }*/

@@ -1,5 +1,6 @@
 #include "../Headers/socket.h"
 
+
 int testConnection(){
     int sock;
     struct sockaddr_in server;
@@ -83,17 +84,22 @@ void *sendDataToQueue(void *cpuSch){
     //Receive a message from client
     char client_message[MESSAGE_LEN];
     pthread_t *thread = malloc(sizeof(pthread_t));
-    while( (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) && cpu->running){
+    int lastId = -1;
+    while((cpu->running == RUNNING) && (client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) > 0){
         ////puts("Connection accepted");
         clearStrArr(client_message, MESSAGE_LEN);
+
         recv(client_sock , client_message , MESSAGE_LEN, 0);
-        printf("Message: %s\n", client_message);
+
         int strLen = strlen(client_message);
-        if(strLen == 1 || strLen == 4){
+
+
+        if((strLen == 1) || (strLen == 4)){
             //////////////////////////////////////////////////////////
             // algoritmo para ordenar
             int algorithm = atoi(client_message);
             if (strLen == 4) {
+                //puts("ENTERED");
                 cpu->running = STOP_WHEN_QUEUE_IS_EMPTY;
                 break;
             }
@@ -107,9 +113,15 @@ void *sendDataToQueue(void *cpuSch){
         else{
             int id,burst,priority;
             getTokens(client_message,&id,&burst,&priority);
+            if(lastId == id) {
+                continue;
+            }
+            lastId = id;
             //////////////////////////////////////////
             process *np = newProcess(id, burst, priority);
+            pthread_mutex_lock(&lock);
             insertProcess(cpu->ready, np, cpu->algorithm);
+            pthread_mutex_unlock(&lock);
             //////////////////////////////////////////
         }
     }

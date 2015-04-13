@@ -8,6 +8,7 @@ void insertProcess(queue *ready, process *proc, int algorithm) {
 		return;
 	}
 	node *toInsert = newNode(proc);
+	int i = 0;
 	while(actual != NULL) {
 		int actualValue;
 		int lastValue;
@@ -24,21 +25,24 @@ void insertProcess(queue *ready, process *proc, int algorithm) {
 				lastValue = actualProcess->priority;
 				break;
 		}
-		if(isLower(actualValue, lastValue)) {
+		if(actualValue <= lastValue) {
 			toInsert->next = actual;
 			toInsert->before = actual->before;
 			actual->before = toInsert;
-			if(toInsert->before == NULL) {
+			if(i == 0) {
+				toInsert->before = NULL;
 				ready->front = toInsert;
 			}
 			ready->count++;
 			return;
 		}
+		i++;
 		actual = actual->next;
 	}
 	ready->rear->next = toInsert;
 	toInsert->before = ready->rear;
 	ready->rear = toInsert;
+	toInsert->next = NULL;
 	ready->count++;
 	return;
 }
@@ -50,5 +54,5 @@ void insertProcess(queue *ready, process *proc, int algorithm) {
  * @return TRUE if actualValue is lower than lastValue, FALSE otherwise
  */
 int isLower(int actualValue, int lastValue) {
-	return actualValue < lastValue;
+	return actualValue <= lastValue;
 }
